@@ -1,0 +1,653 @@
+{{ 'skin-analyzer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'skin-analyzer.js' | asset_url }}" defer></script>
+
+<section id="skin-analyzer-page" data-webhook-url="{{ section.settings.webhook_url }}">
+  
+  <!-- ========================================
+       HERO SECTION - ULTRA MODERNE
+       ======================================== -->
+  <div class="skin-analyzer-hero-modern">
+    <div class="hero-image-container">
+      <img
+        src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1400"
+        alt="Analyse de peau"
+        class="hero-main-image"
+        loading="eager"
+        width="1400"
+        height="933">
+      <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="hero-content-wrapper">
+      <div class="container-fluid">
+        
+        <!-- Titre et sous-titre au-dessus de l'image -->
+        <div class="hero-text-top">
+          <h1 class="hero-main-title">Analyse de la peau</h1>
+          <p class="hero-main-subtitle">Découvre ton type de peau et les soins adaptés à tes besoins</p>
+        </div>
+        
+        <!-- Badge "Optimisé par" -->
+        <div class="hero-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
+          <span>Analyse IA instantanée</span>
+        </div>
+        
+        <!-- Info confidentialité -->
+        <div class="hero-privacy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>Confidentialité garantie</span>
+          <a href="#faq" class="privacy-link">En savoir plus</a>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- CTA Button en bas -->
+    <div class="hero-cta-bottom">
+      <button class="btn-start-modern skin-start-analysis">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <polyline points="21 15 16 10 5 21"></polyline>
+        </svg>
+        <span>Commencer</span>
+      </button>
+    </div>
+    
+    <!-- Features badges -->
+    <div class="hero-features-modern">
+      <div class="feature-badge">
+        <span class="feature-icon">✓</span>
+        <span>Gratuit</span>
+      </div>
+      <div class="feature-badge">
+        <span class="feature-icon">⚡</span>
+        <span>Instantané</span>
+      </div>
+      <div class="feature-badge">
+        <span class="feature-icon">🔒</span>
+        <span>Sécurisé</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       COMMENT ÇA MARCHE - VERSION MODERNE
+       ======================================== -->
+  <div class="how-section-modern">
+    <div class="container">
+      <div class="section-header-modern">
+        <span class="section-label">Processus</span>
+        <h2 class="section-title-modern">Comment ça marche</h2>
+      </div>
+      
+      <div class="steps-grid-modern">
+        <div class="step-modern">
+          <div class="step-icon-modern">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+          </div>
+          <div class="step-content-modern">
+            <span class="step-number-modern">01</span>
+            <h3 class="step-title-modern">Photo</h3>
+            <p class="step-text-modern">Prends une photo de ton visage en lumière naturelle</p>
+          </div>
+        </div>
+        
+        <div class="step-modern">
+          <div class="step-icon-modern">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
+          </div>
+          <div class="step-content-modern">
+            <span class="step-number-modern">02</span>
+            <h3 class="step-title-modern">Analyse</h3>
+            <p class="step-text-modern">L'IA analyse les aspects cosmétiques de ta peau</p>
+          </div>
+        </div>
+        
+        <div class="step-modern">
+          <div class="step-icon-modern">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="step-content-modern">
+            <span class="step-number-modern">03</span>
+            <h3 class="step-title-modern">Résultats</h3>
+            <p class="step-text-modern">Reçois ton profil personnalisé instantanément</p>
+          </div>
+        </div>
+        
+        <div class="step-modern">
+          <div class="step-icon-modern">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+          </div>
+          <div class="step-content-modern">
+            <span class="step-number-modern">04</span>
+            <h3 class="step-title-modern">Routine</h3>
+            <p class="step-text-modern">Découvre les produits adaptés à tes besoins</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       CE QUE NOUS ANALYSONS - VERSION MODERNE
+       ======================================== -->
+  <div class="analysis-section-modern">
+    <div class="container">
+      <div class="section-header-modern">
+        <span class="section-label">Technologie</span>
+        <h2 class="section-title-modern">Ce que l'IA analyse</h2>
+      </div>
+      
+      <div class="analysis-disclaimer-modern">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <p>Cette analyse observe uniquement l'aspect cosmétique visible. Ce n'est pas un diagnostic médical.</p>
+      </div>
+      
+      <div class="analysis-grid-modern">
+        <div class="analysis-card-modern">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <h3>Type de peau</h3>
+          <p>Normale, sèche, mixte ou grasse</p>
+        </div>
+        
+        <div class="analysis-card-modern">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <h3>Texture</h3>
+          <p>Aspect lisse ou irrégulier</p>
+        </div>
+        
+        <div class="analysis-card-modern">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
+          </div>
+          <h3>Rougeurs</h3>
+          <p>Zones réactives visibles</p>
+        </div>
+        
+        <div class="analysis-card-modern">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+            </svg>
+          </div>
+          <h3>Éclat</h3>
+          <p>Luminosité et uniformité</p>
+        </div>
+        
+        <div class="analysis-card-modern">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="12" cy="5" r="1"></circle>
+              <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+          </div>
+          <h3>Imperfections</h3>
+          <p>Points à cibler</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       RÉSULTATS (TEMPLATE DYNAMIQUE)
+       ======================================== -->
+  <div class="results-section-modern" style="display:none;" data-results-container>
+    <div class="container">
+      <div class="section-header-modern">
+        <span class="section-label">Analyse complétée</span>
+        <h2 class="section-title-modern">Ton profil beauté</h2>
+      </div>
+      
+      <div class="result-card-modern">
+        <div class="result-header-modern">
+          <div class="result-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="result-type">
+            <span class="result-label">Type de peau</span>
+            <h3 class="skin-type-modern">{{skin_type_label}}</h3>
+          </div>
+        </div>
+        
+        <p class="skin-description-modern">{{global_appearance}}</p>
+        
+        <div class="result-grid-modern">
+          <div class="result-col">
+            <h4>Observations</h4>
+            <ul class="result-list-modern">
+              {{main_observations}}
+            </ul>
+          </div>
+          
+          <div class="result-col">
+            <h4>Priorités</h4>
+            <ul class="result-list-modern priorities">
+              {{care_priorities}}
+            </ul>
+          </div>
+        </div>
+        
+        <div class="result-note-modern">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+            <path d="M12 16v-4m0-4h.01"></path>
+          </svg>
+          <p>Ta peau évolue : refais l'analyse régulièrement pour adapter ta routine.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       ROUTINE PERSONNALISÉE
+       ======================================== -->
+  <div class="routine-section-modern" style="display:none;" data-routine-container>
+    <div class="container">
+      <div class="section-header-modern">
+        <span class="section-label">Personnalisé</span>
+        <h2 class="section-title-modern">Ta routine sur mesure</h2>
+      </div>
+      
+      <div class="routine-tabs-modern">
+        <div class="routine-tab-modern">
+          <div class="tab-header-modern">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <h3>Matin</h3>
+          </div>
+          
+          <div class="routine-list-modern">
+            <div class="routine-item-modern">
+              <span class="item-number-modern">1</span>
+              <div class="item-content-modern">
+                <h4>{{morning_step_1_role}}</h4>
+                <p class="item-benefit-modern">{{morning_step_1_benefit}}</p>
+                <span class="item-tip-modern">{{morning_step_1_tip}}</span>
+              </div>
+            </div>
+            
+            <div class="routine-item-modern">
+              <span class="item-number-modern">2</span>
+              <div class="item-content-modern">
+                <h4>{{morning_step_2_role}}</h4>
+                <p class="item-benefit-modern">{{morning_step_2_benefit}}</p>
+                <span class="item-tip-modern">{{morning_step_2_tip}}</span>
+              </div>
+            </div>
+            
+            <div class="routine-item-modern">
+              <span class="item-number-modern">3</span>
+              <div class="item-content-modern">
+                <h4>{{morning_step_3_role}}</h4>
+                <p class="item-benefit-modern">{{morning_step_3_benefit}}</p>
+                <span class="item-tip-modern">{{morning_step_3_tip}}</span>
+              </div>
+            </div>
+            
+            <div class="routine-item-modern">
+              <span class="item-number-modern">4</span>
+              <div class="item-content-modern">
+                <h4>{{morning_step_4_role}}</h4>
+                <p class="item-benefit-modern">{{morning_step_4_benefit}}</p>
+                <span class="item-tip-modern">{{morning_step_4_tip}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="routine-tab-modern">
+          <div class="tab-header-modern">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <h3>Soir</h3>
+          </div>
+          
+          <div class="routine-list-modern">
+            <div class="routine-item-modern">
+              <span class="item-number-modern">1</span>
+              <div class="item-content-modern">
+                <h4>{{evening_step_1_role}}</h4>
+                <p class="item-benefit-modern">{{evening_step_1_benefit}}</p>
+                <span class="item-tip-modern">{{evening_step_1_tip}}</span>
+              </div>
+            </div>
+            
+            <div class="routine-item-modern">
+              <span class="item-number-modern">2</span>
+              <div class="item-content-modern">
+                <h4>{{evening_step_2_role}}</h4>
+                <p class="item-benefit-modern">{{evening_step_2_benefit}}</p>
+                <span class="item-tip-modern">{{evening_step_2_tip}}</span>
+              </div>
+            </div>
+            
+            <div class="routine-item-modern">
+              <span class="item-number-modern">3</span>
+              <div class="item-content-modern">
+                <h4>{{evening_step_3_role}}</h4>
+                <p class="item-benefit-modern">{{evening_step_3_benefit}}</p>
+                <span class="item-tip-modern">{{evening_step_3_tip}}</span>
+              </div>
+            </div>
+            
+            <div class="routine-item-modern">
+              <span class="item-number-modern">4</span>
+              <div class="item-content-modern">
+                <h4>{{evening_step_4_role}}</h4>
+                <p class="item-benefit-modern">{{evening_step_4_benefit}}</p>
+                <span class="item-tip-modern">{{evening_step_4_tip}}</span>
+              </div>
+            </div>
+            
+            <div class="routine-item-modern">
+              <span class="item-number-modern">5</span>
+              <div class="item-content-modern">
+                <h4>{{evening_step_5_role}}</h4>
+                <p class="item-benefit-modern">{{evening_step_5_benefit}}</p>
+                <span class="item-tip-modern">{{evening_step_5_tip}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       PRODUITS RECOMMANDÉS
+       ======================================== -->
+  <div class="products-section-modern" style="display:none;" data-products-container>
+    <div class="container">
+      <div class="section-header-modern">
+        <span class="section-label">Sélection</span>
+        <h2 class="section-title-modern">Produits recommandés</h2>
+      </div>
+      
+      <div class="products-grid-modern">
+        
+        <article class="product-card-modern">
+          <div class="product-image-modern">
+            <img src="" alt="{{product_1_title}}" loading="lazy" width="600" height="600">
+            <div class="product-overlay">
+              <button class="btn-quick-view" data-product-handle="{{product_1_handle}}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="product-info-modern">
+            <span class="product-category-modern">{{product_1_type}}</span>
+            <h3 class="product-name-modern">{{product_1_title}}</h3>
+            <p class="product-description-modern">{{product_1_short_benefit}}</p>
+            <div class="product-footer-modern">
+              <span class="product-price-modern">{{product_1_price}}</span>
+              <button class="btn-add-modern" data-product-handle="{{product_1_handle}}">Ajouter</button>
+            </div>
+          </div>
+        </article>
+        
+        <article class="product-card-modern">
+          <div class="product-image-modern">
+            <img src="" alt="{{product_2_title}}" loading="lazy" width="600" height="600">
+            <div class="product-overlay">
+              <button class="btn-quick-view" data-product-handle="{{product_2_handle}}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="product-info-modern">
+            <span class="product-category-modern">{{product_2_type}}</span>
+            <h3 class="product-name-modern">{{product_2_title}}</h3>
+            <p class="product-description-modern">{{product_2_short_benefit}}</p>
+            <div class="product-footer-modern">
+              <span class="product-price-modern">{{product_2_price}}</span>
+              <button class="btn-add-modern" data-product-handle="{{product_2_handle}}">Ajouter</button>
+            </div>
+          </div>
+        </article>
+        
+        <article class="product-card-modern">
+          <div class="product-image-modern">
+            <img src="" alt="{{product_3_title}}" loading="lazy" width="600" height="600">
+            <div class="product-overlay">
+              <button class="btn-quick-view" data-product-handle="{{product_3_handle}}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="product-info-modern">
+            <span class="product-category-modern">{{product_3_type}}</span>
+            <h3 class="product-name-modern">{{product_3_title}}</h3>
+            <p class="product-description-modern">{{product_3_short_benefit}}</p>
+            <div class="product-footer-modern">
+              <span class="product-price-modern">{{product_3_price}}</span>
+              <button class="btn-add-modern" data-product-handle="{{product_3_handle}}">Ajouter</button>
+            </div>
+          </div>
+        </article>
+        
+        <article class="product-card-modern">
+          <div class="product-image-modern">
+            <img src="" alt="{{product_4_title}}" loading="lazy" width="600" height="600">
+            <div class="product-overlay">
+              <button class="btn-quick-view" data-product-handle="{{product_4_handle}}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="product-info-modern">
+            <span class="product-category-modern">{{product_4_type}}</span>
+            <h3 class="product-name-modern">{{product_4_title}}</h3>
+            <p class="product-description-modern">{{product_4_short_benefit}}</p>
+            <div class="product-footer-modern">
+              <span class="product-price-modern">{{product_4_price}}</span>
+              <button class="btn-add-modern" data-product-handle="{{product_4_handle}}">Ajouter</button>
+            </div>
+          </div>
+        </article>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       FAQ
+       ======================================== -->
+  <div class="faq-section-modern">
+    <div class="container-small">
+      <div class="section-header-modern">
+        <span class="section-label">Support</span>
+        <h2 class="section-title-modern">Questions fréquentes</h2>
+      </div>
+      
+      <div class="faq-accordion-modern">
+        
+        <details class="faq-item-modern">
+          <summary class="faq-question-modern">
+            <span>Que devient ma photo ?</span>
+            <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="faq-answer-modern">
+            <p>Ta photo est analysée instantanément par notre IA puis immédiatement supprimée. Elle n'est jamais stockée ni partagée.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item-modern">
+          <summary class="faq-question-modern">
+            <span>Est-ce un diagnostic médical ?</span>
+            <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="faq-answer-modern">
+            <p>Non. L'analyse observe uniquement l'aspect cosmétique visible pour t'aider à choisir les bons produits beauté.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item-modern">
+          <summary class="faq-question-modern">
+            <span>Quand consulter un dermatologue ?</span>
+            <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="faq-answer-modern">
+            <p>Si tu remarques des changements soudains, irritations persistantes ou tout élément inquiétant, consulte un professionnel de santé.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item-modern">
+          <summary class="faq-question-modern">
+            <span>À quelle fréquence refaire l'analyse ?</span>
+            <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="faq-answer-modern">
+            <p>Tous les 2-3 mois ou dès que tu sens que ta peau a changé avec les saisons, stress ou hormones.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item-modern">
+          <summary class="faq-question-modern">
+            <span>Compatible avec tous les types de peau ?</span>
+            <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="faq-answer-modern">
+            <p>Oui, l'IA analyse toutes les carnations et tous les types de peau. L'analyse s'adapte à ton profil unique.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item-modern">
+          <summary class="faq-question-modern">
+            <span>Puis-je analyser avec du maquillage ?</span>
+            <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="faq-answer-modern">
+            <p>Pour des résultats optimaux, préfère une photo sur peau propre. Un maquillage léger reste acceptable.</p>
+          </div>
+        </details>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       CTA FINAL
+       ======================================== -->
+  <div class="cta-section-modern">
+    <div class="container">
+      <div class="cta-content-modern">
+        <h2 class="cta-title-modern">Prête à révéler ton potentiel ?</h2>
+        <p class="cta-text-modern">Une analyse personnalisée en quelques secondes</p>
+        <button class="btn-cta-modern skin-start-analysis">
+          <span>Commencer l'analyse</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Skin Analyzer Modern",
+  "settings": [
+    {
+      "type": "text",
+      "id": "webhook_url",
+      "label": "Webhook URL (n8n)",
+      "info": "URL de votre webhook n8n"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Image Hero",
+      "info": "Image principale (recommandé: 1400x800px)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Skin Analyzer Modern"
+    }
+  ]
+}
+{% endschema %}

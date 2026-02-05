@@ -1,0 +1,338 @@
+<section id="skin-analyzer-page">
+  
+  <!-- ========================================
+       1) HERO – INTRO À L'ANALYSE DE PEAU
+       ======================================== -->
+  <div class="hero-section">
+    <div class="container">
+      <h1 class="hero-title">Découvre ta peau comme jamais</h1>
+      <p class="hero-subtitle">Une analyse personnalisée en 2 minutes pour une routine beauté qui te ressemble vraiment</p>
+      
+      <p class="hero-description">
+        Grâce à l'intelligence artificielle, on observe les aspects visibles de ta peau pour te proposer des soins adaptés à tes besoins du moment.
+      </p>
+      
+      <button class="btn btn-primary skin-start-analysis">Commencer mon analyse</button>
+      
+      <ul class="hero-reassurance">
+        <li>✓ 100% gratuit</li>
+        <li>✓ Résultat en moins de 2 minutes</li>
+        <li>✓ Ta photo reste privée et n'est jamais stockée</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========================================
+       2) COMMENT ÇA MARCHE
+       ======================================== -->
+  <div class="how-it-works-section">
+    <div class="container">
+      <h2 class="section-title">Comment ça marche ?</h2>
+      
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Prends une photo</h3>
+          <p class="step-description">Visage propre, lumière naturelle, sans maquillage si possible.</p>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <h3 class="step-title">L'IA observe ta peau</h3>
+          <p class="step-description">Analyse instantanée des aspects cosmétiques visibles de ton visage.</p>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Reçois ton profil beauté</h3>
+          <p class="step-description">Type de peau, priorités de soin et observations personnalisées.</p>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <h3 class="step-title">Découvre ta routine</h3>
+          <p class="step-description">Produits et gestes adaptés à ton profil pour sublimer ta peau.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       3) CE QUE L'IA ANALYSE
+       ======================================== -->
+  <div class="what-we-analyze-section">
+    <div class="container">
+      <h2 class="section-title">Ce que l'IA observe sur ta peau</h2>
+      
+      <p class="disclaimer">
+        <strong>Important :</strong> Cette analyse observe uniquement l'aspect cosmétique visible de ta peau. Ce n'est pas un diagnostic médical et ça ne remplace jamais l'avis d'un dermatologue.
+      </p>
+      
+      <div class="analysis-points">
+        <div class="analysis-point">
+          <h3 class="point-title">Type de peau global</h3>
+          <p class="point-description">Pour identifier si ta peau a tendance à être sèche, mixte, grasse ou normale, et ainsi choisir des textures et actifs adaptés.</p>
+        </div>
+        
+        <div class="analysis-point">
+          <h3 class="point-title">Texture de surface</h3>
+          <p class="point-description">Observe l'aspect lisse ou irrégulier de la peau pour t'orienter vers des soins lissants ou exfoliants si besoin.</p>
+        </div>
+        
+        <div class="analysis-point">
+          <h3 class="point-title">Rougeurs visibles</h3>
+          <p class="point-description">Détecte les zones réactives pour te conseiller des produits apaisants et renforcer la barrière cutanée.</p>
+        </div>
+        
+        <div class="analysis-point">
+          <h3 class="point-title">Imperfections visibles</h3>
+          <p class="point-description">Repère les zones à imperfections pour proposer des actifs purifiants et régulateurs adaptés.</p>
+        </div>
+        
+        <div class="analysis-point">
+          <h3 class="point-title">Éclat et homogénéité</h3>
+          <p class="point-description">Évalue la luminosité et l'uniformité du teint pour te guider vers des soins illuminateurs ou unifiants.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       4) RÉSULTAT D'ANALYSE (TEMPLATE DYNAMIQUE)
+       ======================================== -->
+  <div class="results-section" style="display:none;" data-results-container>
+    <div class="container">
+      <h2 class="section-title">Ton profil beauté personnalisé</h2>
+      
+      <div class="skin-type-card">
+        <h3 class="skin-type-label">{{skin_type_label}}</h3>
+        <p class="global-appearance">{{global_appearance}}</p>
+      </div>
+      
+      <div class="observations-block">
+        <h3 class="block-title">Ce qu'on observe</h3>
+        <ul class="observations-list">
+          {{main_observations}}
+        </ul>
+      </div>
+      
+      <div class="priorities-block">
+        <h3 class="block-title">Tes priorités beauté</h3>
+        <ul class="priorities-list">
+          {{care_priorities}}
+        </ul>
+      </div>
+      
+      <p class="results-note">
+        Ces observations sont là pour t'aider à mieux comprendre ta peau et adapter ta routine. Ta peau évolue avec les saisons, le stress, l'alimentation : n'hésite pas à refaire l'analyse régulièrement !
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================
+       5) ROUTINE RECOMMANDÉE (MATIN / SOIR)
+       ======================================== -->
+  <div class="routine-section" style="display:none;" data-routine-container>
+    <div class="container">
+      <h2 class="section-title">Ta routine personnalisée</h2>
+      
+      <!-- ROUTINE MATIN -->
+      <div class="routine-block routine-morning">
+        <h3 class="routine-title">☀️ Routine du matin</h3>
+        
+        <ol class="routine-steps">
+          <li class="routine-step">
+            <span class="step-role">{{morning_step_1_role}}</span>
+            <p class="step-benefit">{{morning_step_1_benefit}}</p>
+            <p class="step-tip">{{morning_step_1_tip}}</p>
+          </li>
+          
+          <li class="routine-step">
+            <span class="step-role">{{morning_step_2_role}}</span>
+            <p class="step-benefit">{{morning_step_2_benefit}}</p>
+            <p class="step-tip">{{morning_step_2_tip}}</p>
+          </li>
+          
+          <li class="routine-step">
+            <span class="step-role">{{morning_step_3_role}}</span>
+            <p class="step-benefit">{{morning_step_3_benefit}}</p>
+            <p class="step-tip">{{morning_step_3_tip}}</p>
+          </li>
+          
+          <li class="routine-step">
+            <span class="step-role">{{morning_step_4_role}}</span>
+            <p class="step-benefit">{{morning_step_4_benefit}}</p>
+            <p class="step-tip">{{morning_step_4_tip}}</p>
+          </li>
+        </ol>
+      </div>
+      
+      <!-- ROUTINE SOIR -->
+      <div class="routine-block routine-evening">
+        <h3 class="routine-title">🌙 Routine du soir</h3>
+        
+        <ol class="routine-steps">
+          <li class="routine-step">
+            <span class="step-role">{{evening_step_1_role}}</span>
+            <p class="step-benefit">{{evening_step_1_benefit}}</p>
+            <p class="step-tip">{{evening_step_1_tip}}</p>
+          </li>
+          
+          <li class="routine-step">
+            <span class="step-role">{{evening_step_2_role}}</span>
+            <p class="step-benefit">{{evening_step_2_benefit}}</p>
+            <p class="step-tip">{{evening_step_2_tip}}</p>
+          </li>
+          
+          <li class="routine-step">
+            <span class="step-role">{{evening_step_3_role}}</span>
+            <p class="step-benefit">{{evening_step_3_benefit}}</p>
+            <p class="step-tip">{{evening_step_3_tip}}</p>
+          </li>
+          
+          <li class="routine-step">
+            <span class="step-role">{{evening_step_4_role}}</span>
+            <p class="step-benefit">{{evening_step_4_benefit}}</p>
+            <p class="step-tip">{{evening_step_4_tip}}</p>
+          </li>
+          
+          <li class="routine-step">
+            <span class="step-role">{{evening_step_5_role}}</span>
+            <p class="step-benefit">{{evening_step_5_benefit}}</p>
+            <p class="step-tip">{{evening_step_5_tip}}</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       6) PRODUITS QUI POURRAIENT TE CONVENIR
+       ======================================== -->
+  <div class="products-section" style="display:none;" data-products-container>
+    <div class="container">
+      <h2 class="section-title">Les produits faits pour toi</h2>
+      
+      <div class="products-grid">
+        
+        <div class="product-card">
+          <h3 class="product-title">{{product_1_title}}</h3>
+          <p class="product-type">{{product_1_type}}</p>
+          <p class="product-benefit">{{product_1_short_benefit}}</p>
+          <p class="product-price">{{product_1_price}}</p>
+          <button class="btn btn-secondary" data-product-handle="{{product_1_handle}}">Découvrir</button>
+        </div>
+        
+        <div class="product-card">
+          <h3 class="product-title">{{product_2_title}}</h3>
+          <p class="product-type">{{product_2_type}}</p>
+          <p class="product-benefit">{{product_2_short_benefit}}</p>
+          <p class="product-price">{{product_2_price}}</p>
+          <button class="btn btn-secondary" data-product-handle="{{product_2_handle}}">Découvrir</button>
+        </div>
+        
+        <div class="product-card">
+          <h3 class="product-title">{{product_3_title}}</h3>
+          <p class="product-type">{{product_3_type}}</p>
+          <p class="product-benefit">{{product_3_short_benefit}}</p>
+          <p class="product-price">{{product_3_price}}</p>
+          <button class="btn btn-secondary" data-product-handle="{{product_3_handle}}">Découvrir</button>
+        </div>
+        
+        <div class="product-card">
+          <h3 class="product-title">{{product_4_title}}</h3>
+          <p class="product-type">{{product_4_type}}</p>
+          <p class="product-benefit">{{product_4_short_benefit}}</p>
+          <p class="product-price">{{product_4_price}}</p>
+          <button class="btn btn-secondary" data-product-handle="{{product_4_handle}}">Découvrir</button>
+        </div>
+        
+        <div class="product-card">
+          <h3 class="product-title">{{product_5_title}}</h3>
+          <p class="product-type">{{product_5_type}}</p>
+          <p class="product-benefit">{{product_5_short_benefit}}</p>
+          <p class="product-price">{{product_5_price}}</p>
+          <button class="btn btn-secondary" data-product-handle="{{product_5_handle}}">Découvrir</button>
+        </div>
+        
+        <div class="product-card">
+          <h3 class="product-title">{{product_6_title}}</h3>
+          <p class="product-type">{{product_6_type}}</p>
+          <p class="product-benefit">{{product_6_short_benefit}}</p>
+          <p class="product-price">{{product_6_price}}</p>
+          <button class="btn btn-secondary" data-product-handle="{{product_6_handle}}">Découvrir</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       7) FAQ – QUESTIONS FRÉQUENTES
+       ======================================== -->
+  <div class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Questions fréquentes</h2>
+      
+      <div class="faq-list">
+        
+        <div class="faq-item">
+          <h3 class="faq-question">Que devient ma photo ?</h3>
+          <p class="faq-answer">
+            Ta photo est analysée en temps réel par l'intelligence artificielle, puis immédiatement supprimée. Elle n'est jamais stockée sur nos serveurs, ni partagée avec qui que ce soit. Ton intimité est notre priorité.
+          </p>
+        </div>
+        
+        <div class="faq-item">
+          <h3 class="faq-question">Est-ce un diagnostic médical ?</h3>
+          <p class="faq-answer">
+            Non, pas du tout. L'analyse observe uniquement l'aspect cosmétique visible de ta peau pour t'aider à choisir les bons produits beauté. Ce n'est pas un outil médical et ça ne remplace jamais l'avis d'un professionnel de santé.
+          </p>
+        </div>
+        
+        <div class="faq-item">
+          <h3 class="faq-question">Quand consulter un dermatologue ?</h3>
+          <p class="faq-answer">
+            Si tu remarques des changements soudains sur ta peau, des irritations persistantes, des réactions inhabituelles ou tout élément qui t'inquiète, consulte toujours un dermatologue. Cette analyse beauté ne détecte pas les problèmes de santé cutanée.
+          </p>
+        </div>
+        
+        <div class="faq-item">
+          <h3 class="faq-question">À quelle fréquence refaire l'analyse ?</h3>
+          <p class="faq-answer">
+            Ta peau évolue avec les saisons, le stress, l'alimentation ou les changements hormonaux. On te conseille de refaire l'analyse tous les 2 à 3 mois, ou dès que tu sens que ta peau a changé, pour ajuster ta routine en conséquence.
+          </p>
+        </div>
+        
+        <div class="faq-item">
+          <h3 class="faq-question">L'analyse fonctionne pour tous les types de peau ?</h3>
+          <p class="faq-answer">
+            Oui ! L'IA est entraînée pour observer toutes les carnations et tous les types de peau. Que ta peau soit claire, mate ou foncée, sèche ou grasse, l'analyse s'adapte à ton profil unique.
+          </p>
+        </div>
+        
+        <div class="faq-item">
+          <h3 class="faq-question">Puis-je faire l'analyse avec du maquillage ?</h3>
+          <p class="faq-answer">
+            Pour des résultats optimaux, on te recommande de prendre ta photo sur peau propre, sans maquillage. Mais si tu portes un maquillage léger, l'analyse pourra quand même observer certains aspects de ta peau.
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       8) CTA FINAL
+       ======================================== -->
+  <div class="cta-final-section">
+    <div class="container">
+      <h2 class="cta-title">Prête à révéler le potentiel de ta peau ?</h2>
+      <p class="cta-description">
+        Pas de peau parfaite, juste ta peau. Et on est là pour t'aider à en prendre soin avec bienveillance.
+      </p>
+      <button class="btn btn-primary skin-start-analysis">Lancer mon analyse gratuite</button>
+    </div>
+  </div>
+
+</section>
