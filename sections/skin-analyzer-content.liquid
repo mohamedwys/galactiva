@@ -7,17 +7,12 @@
 
   {%- comment -%} HERO SECTION {%- endcomment -%}
   <section class="skin-analyzer-hero-modern">
-    <div class="hero-image-container">
+    <div class="hero-image-container {% unless section.settings.hero_image != blank %}hero-gradient-fallback{% endunless %}">
       {% if section.settings.hero_image != blank %}
         {{ section.settings.hero_image | image_url: width: 2000 | image_tag:
           loading: 'eager',
           class: 'hero-main-image',
           alt: section.settings.hero_title }}
-      {% else %}
-        <img src="https://cdn.shopify.com/s/files/1/0070/7032/files/skin-analysis-hero.jpg"
-             alt="Analyse de peau IA"
-             class="hero-main-image"
-             loading="eager">
       {% endif %}
     </div>
 

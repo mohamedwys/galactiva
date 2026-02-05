@@ -116,7 +116,9 @@
    ============================================ */
 .skin-analyzer-hero-modern {
   position: relative;
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   height: 100vh;
   min-height: 600px;
   max-height: 900px;
@@ -139,6 +141,18 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+/* Gradient fallback when no image uploaded */
+.hero-gradient-fallback {
+  background: linear-gradient(
+    135deg,
+    #d4a574 0%,
+    #c89968 25%,
+    #b88d5c 50%,
+    #a67f52 75%,
+    #8f6d45 100%
+  );
 }
 
 .hero-overlay {
