@@ -114,7 +114,7 @@
 /* ============================================
    HERO SECTION - ULTRA MODERNE
    ============================================ */
-.skin-analyzer-hero-modern {
+#skin-analyzer-page .skin-analyzer-hero-modern {
   position: relative;
   width: 100vw;
   margin-left: calc(50% - 50vw);
@@ -127,7 +127,7 @@
   overflow: hidden;
 }
 
-.hero-image-container {
+#skin-analyzer-page .hero-image-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -136,7 +136,7 @@
   z-index: 0;
 }
 
-.hero-main-image {
+#skin-analyzer-page .hero-main-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -144,7 +144,7 @@
 }
 
 /* Gradient fallback when no image uploaded */
-.hero-gradient-fallback {
+#skin-analyzer-page .hero-gradient-fallback {
   background: linear-gradient(
     135deg,
     #d4a574 0%,
@@ -155,7 +155,7 @@
   );
 }
 
-.hero-overlay {
+#skin-analyzer-page .hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -169,7 +169,7 @@
   );
 }
 
-.hero-content-wrapper {
+#skin-analyzer-page .hero-content-wrapper {
   position: relative;
   z-index: 1;
   flex: 1;
@@ -180,12 +180,12 @@
 }
 
 /* Titre et sous-titre au-dessus */
-.hero-text-top {
+#skin-analyzer-page .hero-text-top {
   text-align: center;
   margin-top: var(--space-8);
 }
 
-.hero-main-title {
+#skin-analyzer-page .hero-main-title {
   font-size: clamp(2.5rem, 5vw, 4rem);
   color: white;
   font-weight: 600;
@@ -193,7 +193,7 @@
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-.hero-main-subtitle {
+#skin-analyzer-page .hero-main-subtitle {
   font-size: clamp(1rem, 2vw, 1.25rem);
   color: rgba(255, 255, 255, 0.9);
   max-width: 600px;
@@ -203,7 +203,7 @@
 }
 
 /* Badge "Optimisé par" */
-.hero-badge {
+#skin-analyzer-page .hero-badge {
   position: absolute;
   top: var(--space-6);
   right: var(--space-4);
@@ -219,12 +219,12 @@
   box-shadow: var(--shadow-md);
 }
 
-.hero-badge svg {
+#skin-analyzer-page .hero-badge svg {
   color: var(--color-accent);
 }
 
 /* Info confidentialité */
-.hero-privacy {
+#skin-analyzer-page .hero-privacy {
   position: absolute;
   bottom: var(--space-6);
   left: var(--space-4);
@@ -236,7 +236,7 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
-.hero-privacy svg {
+#skin-analyzer-page .hero-privacy svg {
   opacity: 0.8;
 }
 
@@ -252,7 +252,7 @@
 }
 
 /* CTA Button en bas */
-.hero-cta-bottom {
+#skin-analyzer-page .hero-cta-bottom {
   position: absolute;
   bottom: var(--space-6);
   left: 50%;
@@ -260,7 +260,7 @@
   z-index: 2;
 }
 
-.btn-start-modern {
+#skin-analyzer-page .btn-start-modern {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -278,19 +278,19 @@
   box-shadow: 0 4px 20px rgba(212, 165, 116, 0.4);
 }
 
-.btn-start-modern:hover {
+#skin-analyzer-page .btn-start-modern:hover {
   background: var(--color-accent);
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(212, 165, 116, 0.5);
 }
 
-.btn-start-modern svg {
+#skin-analyzer-page .btn-start-modern svg {
   width: 20px;
   height: 20px;
 }
 
 /* Features badges */
-.hero-features-modern {
+#skin-analyzer-page .hero-features-modern {
   position: absolute;
   bottom: var(--space-6);
   right: var(--space-4);
@@ -298,7 +298,7 @@
   gap: var(--space-2);
 }
 
-.feature-badge {
+#skin-analyzer-page .feature-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -311,19 +311,19 @@
   box-shadow: var(--shadow-sm);
 }
 
-.feature-icon {
+#skin-analyzer-page .feature-icon {
   font-size: 1rem;
 }
 
 /* ============================================
    SECTION HEADERS MODERNE
    ============================================ */
-.section-header-modern {
+#skin-analyzer-page .section-header-modern {
   text-align: center;
   margin-bottom: var(--space-8);
 }
 
-.section-label {
+#skin-analyzer-page .section-label {
   display: inline-block;
   padding: var(--space-1) var(--space-3);
   background: var(--color-background-alt);
@@ -336,7 +336,7 @@
   margin-bottom: var(--space-3);
 }
 
-.section-title-modern {
+#skin-analyzer-page .section-title-modern {
   font-size: clamp(2rem, 4vw, 3rem);
   color: var(--color-primary);
   font-weight: 600;
@@ -346,7 +346,7 @@
 /* ============================================
    HOW IT WORKS - MODERNE
    ============================================ */
-.how-section-modern {
+#skin-analyzer-page .how-section-modern {
   padding: var(--space-12) 0;
   background: var(--color-background);
 }
@@ -358,7 +358,7 @@
   margin-top: var(--space-8);
 }
 
-.step-modern {
+#skin-analyzer-page .step-modern {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -369,13 +369,13 @@
   transition: all var(--transition);
 }
 
-.step-modern:hover {
+#skin-analyzer-page .step-modern:hover {
   border-color: var(--color-accent);
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 
-.step-icon-modern {
+#skin-analyzer-page .step-icon-modern {
   width: 48px;
   height: 48px;
   display: flex;
@@ -387,11 +387,11 @@
   margin-bottom: var(--space-3);
 }
 
-.step-content-modern {
+#skin-analyzer-page .step-content-modern {
   flex: 1;
 }
 
-.step-number-modern {
+#skin-analyzer-page .step-number-modern {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--color-text-tertiary);
@@ -399,14 +399,14 @@
   margin-bottom: var(--space-1);
 }
 
-.step-title-modern {
+#skin-analyzer-page .step-title-modern {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-primary);
   margin-bottom: var(--space-1);
 }
 
-.step-text-modern {
+#skin-analyzer-page .step-text-modern {
   font-size: 0.9375rem;
   color: var(--color-text-secondary);
   line-height: 1.6;
@@ -415,12 +415,12 @@
 /* ============================================
    ANALYSIS SECTION - MODERNE
    ============================================ */
-.analysis-section-modern {
+#skin-analyzer-page .analysis-section-modern {
   padding: var(--space-12) 0;
   background: var(--color-background-alt);
 }
 
-.analysis-disclaimer-modern {
+#skin-analyzer-page .analysis-disclaimer-modern {
   display: flex;
   align-items: flex-start;
   gap: var(--space-2);
@@ -434,19 +434,19 @@
   color: var(--color-text-secondary);
 }
 
-.analysis-disclaimer-modern svg {
+#skin-analyzer-page .analysis-disclaimer-modern svg {
   flex-shrink: 0;
   color: var(--color-accent);
   margin-top: 2px;
 }
 
-.analysis-grid-modern {
+#skin-analyzer-page .analysis-grid-modern {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--space-4);
 }
 
-.analysis-card-modern {
+#skin-analyzer-page .analysis-card-modern {
   padding: var(--space-5);
   background: white;
   border-radius: var(--border-radius);
@@ -454,24 +454,24 @@
   transition: all var(--transition);
 }
 
-.analysis-card-modern:hover {
+#skin-analyzer-page .analysis-card-modern:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 
-.analysis-card-modern .card-icon {
+#skin-analyzer-page .analysis-card-modern .card-icon {
   margin: 0 auto var(--space-3);
   color: var(--color-accent);
 }
 
-.analysis-card-modern h3 {
+#skin-analyzer-page .analysis-card-modern h3 {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-primary);
   margin-bottom: var(--space-1);
 }
 
-.analysis-card-modern p {
+#skin-analyzer-page .analysis-card-modern p {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
 }
@@ -479,12 +479,12 @@
 /* ============================================
    RESULTS SECTION - MODERNE
    ============================================ */
-.results-section-modern {
+#skin-analyzer-page .results-section-modern {
   padding: var(--space-12) 0;
   background: var(--color-background);
 }
 
-.result-card-modern {
+#skin-analyzer-page .result-card-modern {
   max-width: 900px;
   margin: 0 auto;
   padding: var(--space-6);
@@ -494,7 +494,7 @@
   box-shadow: var(--shadow-lg);
 }
 
-.result-header-modern {
+#skin-analyzer-page .result-header-modern {
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -503,7 +503,7 @@
   margin-bottom: var(--space-5);
 }
 
-.result-icon {
+#skin-analyzer-page .result-icon {
   width: 64px;
   height: 64px;
   display: flex;
@@ -515,11 +515,11 @@
   flex-shrink: 0;
 }
 
-.result-type {
+#skin-analyzer-page .result-type {
   flex: 1;
 }
 
-.result-label {
+#skin-analyzer-page .result-label {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -529,41 +529,41 @@
   margin-bottom: var(--space-1);
 }
 
-.skin-type-modern {
+#skin-analyzer-page .skin-type-modern {
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--color-primary);
 }
 
-.skin-description-modern {
+#skin-analyzer-page .skin-description-modern {
   font-size: 1.125rem;
   color: var(--color-text-secondary);
   line-height: 1.7;
   margin-bottom: var(--space-5);
 }
 
-.result-grid-modern {
+#skin-analyzer-page .result-grid-modern {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--space-5);
   margin-bottom: var(--space-5);
 }
 
-.result-col h4 {
+#skin-analyzer-page .result-col h4 {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-primary);
   margin-bottom: var(--space-3);
 }
 
-.result-list-modern {
+#skin-analyzer-page .result-list-modern {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.result-list-modern li {
+#skin-analyzer-page .result-list-modern li {
   padding-left: var(--space-3);
   position: relative;
   font-size: 0.9375rem;
@@ -571,7 +571,7 @@
   line-height: 1.6;
 }
 
-.result-list-modern li::before {
+#skin-analyzer-page .result-list-modern li::before {
   content: '';
   position: absolute;
   left: 0;
@@ -582,11 +582,11 @@
   border-radius: 50%;
 }
 
-.result-list-modern.priorities li::before {
+#skin-analyzer-page .result-list-modern.priorities li::before {
   background: var(--color-primary);
 }
 
-.result-note-modern {
+#skin-analyzer-page .result-note-modern {
   display: flex;
   align-items: flex-start;
   gap: var(--space-2);
@@ -598,7 +598,7 @@
   font-style: italic;
 }
 
-.result-note-modern svg {
+#skin-analyzer-page .result-note-modern svg {
   flex-shrink: 0;
   color: var(--color-accent);
   margin-top: 2px;
@@ -607,26 +607,26 @@
 /* ============================================
    ROUTINE SECTION - MODERNE
    ============================================ */
-.routine-section-modern {
+#skin-analyzer-page .routine-section-modern {
   padding: var(--space-12) 0;
   background: var(--color-background-alt);
 }
 
-.routine-tabs-modern {
+#skin-analyzer-page .routine-tabs-modern {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: var(--space-6);
   margin-top: var(--space-8);
 }
 
-.routine-tab-modern {
+#skin-analyzer-page .routine-tab-modern {
   background: white;
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   border: 1px solid var(--color-border-light);
 }
 
-.tab-header-modern {
+#skin-analyzer-page .tab-header-modern {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -635,24 +635,24 @@
   border-bottom: 1px solid var(--color-border-light);
 }
 
-.tab-header-modern svg {
+#skin-analyzer-page .tab-header-modern svg {
   color: var(--color-accent);
 }
 
-.tab-header-modern h3 {
+#skin-analyzer-page .tab-header-modern h3 {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-primary);
 }
 
-.routine-list-modern {
+#skin-analyzer-page .routine-list-modern {
   padding: var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.routine-item-modern {
+#skin-analyzer-page .routine-item-modern {
   display: flex;
   gap: var(--space-3);
   padding: var(--space-3);
@@ -661,12 +661,12 @@
   transition: all var(--transition);
 }
 
-.routine-item-modern:hover {
+#skin-analyzer-page .routine-item-modern:hover {
   background: white;
   box-shadow: var(--shadow-sm);
 }
 
-.item-number-modern {
+#skin-analyzer-page .item-number-modern {
   flex-shrink: 0;
   width: 32px;
   height: 32px;
@@ -680,24 +680,24 @@
   font-weight: 700;
 }
 
-.item-content-modern {
+#skin-analyzer-page .item-content-modern {
   flex: 1;
 }
 
-.item-content-modern h4 {
+#skin-analyzer-page .item-content-modern h4 {
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-primary);
   margin-bottom: var(--space-1);
 }
 
-.item-benefit-modern {
+#skin-analyzer-page .item-benefit-modern {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
   margin-bottom: var(--space-1);
 }
 
-.item-tip-modern {
+#skin-analyzer-page .item-tip-modern {
   font-size: 0.8125rem;
   color: var(--color-text-tertiary);
   font-style: italic;
@@ -706,19 +706,19 @@
 /* ============================================
    PRODUCTS SECTION - MODERNE
    ============================================ */
-.products-section-modern {
+#skin-analyzer-page .products-section-modern {
   padding: var(--space-12) 0;
   background: var(--color-background);
 }
 
-.products-grid-modern {
+#skin-analyzer-page .products-grid-modern {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--space-6);
   margin-top: var(--space-8);
 }
 
-.product-card-modern {
+#skin-analyzer-page .product-card-modern {
   background: white;
   border: 1px solid var(--color-border-light);
   border-radius: var(--border-radius-lg);
@@ -726,13 +726,13 @@
   transition: all var(--transition);
 }
 
-.product-card-modern:hover {
+#skin-analyzer-page .product-card-modern:hover {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-md);
   transform: translateY(-4px);
 }
 
-.product-image-modern {
+#skin-analyzer-page .product-image-modern {
   position: relative;
   width: 100%;
   height: 300px;
@@ -740,18 +740,18 @@
   overflow: hidden;
 }
 
-.product-image-modern img {
+#skin-analyzer-page .product-image-modern img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-slow);
 }
 
-.product-card-modern:hover .product-image-modern img {
+#skin-analyzer-page .product-card-modern:hover .product-image-modern img {
   transform: scale(1.05);
 }
 
-.product-overlay {
+#skin-analyzer-page .product-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -765,11 +765,11 @@
   transition: opacity var(--transition);
 }
 
-.product-card-modern:hover .product-overlay {
+#skin-analyzer-page .product-card-modern:hover .product-overlay {
   opacity: 1;
 }
 
-.btn-quick-view {
+#skin-analyzer-page .btn-quick-view {
   padding: var(--space-2) var(--space-3);
   background: white;
   border: none;
@@ -779,16 +779,16 @@
   transition: all var(--transition);
 }
 
-.btn-quick-view:hover {
+#skin-analyzer-page .btn-quick-view:hover {
   background: var(--color-accent);
   color: white;
 }
 
-.product-info-modern {
+#skin-analyzer-page .product-info-modern {
   padding: var(--space-4);
 }
 
-.product-category-modern {
+#skin-analyzer-page .product-category-modern {
   display: inline-block;
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -798,21 +798,21 @@
   margin-bottom: var(--space-1);
 }
 
-.product-name-modern {
+#skin-analyzer-page .product-name-modern {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-primary);
   margin-bottom: var(--space-1);
 }
 
-.product-description-modern {
+#skin-analyzer-page .product-description-modern {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin-bottom: var(--space-3);
 }
 
-.product-footer-modern {
+#skin-analyzer-page .product-footer-modern {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -820,13 +820,13 @@
   border-top: 1px solid var(--color-border-light);
 }
 
-.product-price-modern {
+#skin-analyzer-page .product-price-modern {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-primary);
 }
 
-.btn-add-modern {
+#skin-analyzer-page .btn-add-modern {
   padding: var(--space-2) var(--space-4);
   background: var(--color-primary);
   color: white;
@@ -838,7 +838,7 @@
   transition: all var(--transition);
 }
 
-.btn-add-modern:hover {
+#skin-analyzer-page .btn-add-modern:hover {
   background: var(--color-accent);
   transform: translateY(-2px);
 }
@@ -846,19 +846,19 @@
 /* ============================================
    FAQ SECTION - MODERNE
    ============================================ */
-.faq-section-modern {
+#skin-analyzer-page .faq-section-modern {
   padding: var(--space-12) 0;
   background: var(--color-background-alt);
 }
 
-.faq-accordion-modern {
+#skin-analyzer-page .faq-accordion-modern {
   margin-top: var(--space-8);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.faq-item-modern {
+#skin-analyzer-page .faq-item-modern {
   background: white;
   border: 1px solid var(--color-border-light);
   border-radius: var(--border-radius);
@@ -866,11 +866,11 @@
   transition: all var(--transition);
 }
 
-.faq-item-modern[open] {
+#skin-analyzer-page .faq-item-modern[open] {
   box-shadow: var(--shadow-sm);
 }
 
-.faq-question-modern {
+#skin-analyzer-page .faq-question-modern {
   padding: var(--space-4);
   display: flex;
   justify-content: space-between;
@@ -883,25 +883,25 @@
   transition: all var(--transition);
 }
 
-.faq-question-modern::-webkit-details-marker {
+#skin-analyzer-page .faq-question-modern::-webkit-details-marker {
   display: none;
 }
 
-.faq-question-modern:hover {
+#skin-analyzer-page .faq-question-modern:hover {
   color: var(--color-accent);
 }
 
-.faq-icon {
+#skin-analyzer-page .faq-icon {
   transition: transform var(--transition);
   color: var(--color-text-tertiary);
 }
 
-.faq-item-modern[open] .faq-icon {
+#skin-analyzer-page .faq-item-modern[open] .faq-icon {
   transform: rotate(180deg);
   color: var(--color-accent);
 }
 
-.faq-answer-modern {
+#skin-analyzer-page .faq-answer-modern {
   padding: 0 var(--space-4) var(--space-4);
   color: var(--color-text-secondary);
   font-size: 0.9375rem;
@@ -911,32 +911,32 @@
 /* ============================================
    CTA FINAL - MODERNE
    ============================================ */
-.cta-section-modern {
+#skin-analyzer-page .cta-section-modern {
   padding: var(--space-12) 0;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-background-dark) 100%);
   color: white;
   text-align: center;
 }
 
-.cta-content-modern {
+#skin-analyzer-page .cta-content-modern {
   max-width: 600px;
   margin: 0 auto;
 }
 
-.cta-title-modern {
+#skin-analyzer-page .cta-title-modern {
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 600;
   color: white;
   margin-bottom: var(--space-2);
 }
 
-.cta-text-modern {
+#skin-analyzer-page .cta-text-modern {
   font-size: 1.125rem;
   color: rgba(255, 255, 255, 0.8);
   margin-bottom: var(--space-6);
 }
 
-.btn-cta-modern {
+#skin-analyzer-page .btn-cta-modern {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -951,7 +951,7 @@
   transition: all var(--transition);
 }
 
-.btn-cta-modern:hover {
+#skin-analyzer-page .btn-cta-modern:hover {
   background: var(--color-accent);
   color: white;
   transform: translateY(-2px);
@@ -961,7 +961,7 @@
 /* ============================================
    LOADING OVERLAY
    ============================================ */
-#skin-analyzer-page .loading-overlay {
+.loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -989,7 +989,7 @@
   to { transform: rotate(360deg); }
 }
 
-#skin-analyzer-page .loading-text {
+.loading-text {
   margin-top: var(--space-4);
   font-size: 1.125rem;
   color: var(--color-text);
@@ -1209,7 +1209,7 @@ html {
 /* ============================================
    LOADING SPINNER FIX
    ============================================ */
-#skin-analyzer-page .loading-spinner {
+.loading-spinner {
   width: 48px;
   height: 48px;
   border: 3px solid var(--color-border);
@@ -1218,7 +1218,7 @@ html {
   animation: spin 0.8s linear infinite;
 }
 
-#skin-analyzer-page .loading-content {
+.loading-content {
   display: flex;
   flex-direction: column;
   align-items: center;

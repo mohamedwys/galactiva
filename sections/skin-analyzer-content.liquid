@@ -3,6 +3,415 @@
   Production-ready implementation for Dawn theme
 {% endcomment %}
 
+<style>
+/* ============================================
+   EMERGENCY CRITICAL CSS - INLINE
+   Ensures styling works immediately
+   ============================================ */
+#skin-analyzer-page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #000000;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HERO SECTION - CRITICAL */
+#skin-analyzer-page .skin-analyzer-hero-modern {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  height: 100vh;
+  min-height: 600px;
+  max-height: 900px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#skin-analyzer-page .hero-image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+#skin-analyzer-page .hero-gradient-fallback {
+  background: linear-gradient(135deg, #d4a574 0%, #c89968 25%, #b88d5c 50%, #a67f52 75%, #8f6d45 100%);
+}
+
+#skin-analyzer-page .hero-main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#skin-analyzer-page .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.4) 100%);
+  z-index: 0;
+}
+
+#skin-analyzer-page .hero-content-wrapper {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 0;
+}
+
+#skin-analyzer-page .hero-text-top {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+#skin-analyzer-page .hero-main-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: white;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+#skin-analyzer-page .hero-main-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(255,255,255,0.9);
+  max-width: 600px;
+  margin: 0 auto;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+}
+
+#skin-analyzer-page .hero-badge {
+  position: absolute;
+  top: 3rem;
+  right: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+#skin-analyzer-page .hero-privacy {
+  text-align: center;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.875rem;
+}
+
+#skin-analyzer-page .btn-start-modern,
+#skin-analyzer-page .btn-cta-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 2.5rem;
+  background: white;
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+#skin-analyzer-page .btn-start-modern:hover,
+#skin-analyzer-page .btn-cta-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+#skin-analyzer-page .hero-cta-bottom {
+  text-align: center;
+  margin-top: auto;
+}
+
+#skin-analyzer-page .hero-features-modern {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+#skin-analyzer-page .feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* SECTION STYLES - CRITICAL */
+#skin-analyzer-page .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+#skin-analyzer-page .container-small {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+#skin-analyzer-page section {
+  padding: 5rem 0;
+}
+
+#skin-analyzer-page .section-header-modern {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+#skin-analyzer-page .section-label {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: #f8f8f8;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #d4a574;
+  margin-bottom: 1rem;
+}
+
+#skin-analyzer-page .section-title-modern {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 1rem;
+}
+
+/* RESULTS CARDS - CRITICAL */
+#skin-analyzer-page .result-card-modern {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+#skin-analyzer-page .result-header-modern {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+#skin-analyzer-page .result-icon {
+  width: 64px;
+  height: 64px;
+  background: #f8f8f8;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4a574;
+}
+
+#skin-analyzer-page .skin-type-modern {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+}
+
+#skin-analyzer-page .result-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+#skin-analyzer-page .result-list-modern {
+  list-style: none;
+  padding: 0;
+}
+
+#skin-analyzer-page .result-list-modern li {
+  padding: 0.75rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+#skin-analyzer-page .result-list-modern li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #d4a574;
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* ROUTINE TABS - CRITICAL */
+#skin-analyzer-page .routine-tabs-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+#skin-analyzer-page .routine-tab-modern {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+#skin-analyzer-page .tab-header-modern {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+#skin-analyzer-page .routine-list-modern {
+  list-style: none;
+  padding: 0;
+}
+
+#skin-analyzer-page .routine-step {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f8f8;
+  border-radius: 12px;
+}
+
+#skin-analyzer-page .step-role {
+  font-weight: 600;
+  color: #d4a574;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* PRODUCTS GRID - CRITICAL */
+#skin-analyzer-page .products-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+#skin-analyzer-page .product-card {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+#skin-analyzer-page .product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+#skin-analyzer-page .product-image-modern {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f8f8f8;
+}
+
+#skin-analyzer-page .product-image-modern img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#skin-analyzer-page .product-info-modern {
+  padding: 1.5rem;
+}
+
+#skin-analyzer-page .product-name-modern {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+#skin-analyzer-page .product-price-modern {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #d4a574;
+}
+
+#skin-analyzer-page .btn-add-modern {
+  width: 100%;
+  padding: 0.875rem;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 1rem;
+}
+
+#skin-analyzer-page .btn-add-modern:hover {
+  background: #d4a574;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  #skin-analyzer-page .skin-analyzer-hero-modern {
+    height: 70vh;
+    min-height: 500px;
+  }
+
+  #skin-analyzer-page .hero-badge {
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.75rem;
+    padding: 0.375rem 1rem;
+  }
+
+  #skin-analyzer-page .hero-main-title {
+    font-size: 2rem;
+  }
+
+  #skin-analyzer-page .hero-main-subtitle {
+    font-size: 1rem;
+  }
+
+  #skin-analyzer-page .routine-tabs-modern {
+    grid-template-columns: 1fr;
+  }
+
+  #skin-analyzer-page .products-grid-modern {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
 <div id="skin-analyzer-page">
 
   {%- comment -%} HERO SECTION {%- endcomment -%}
