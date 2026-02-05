@@ -1,8 +1,15 @@
 {% comment %}
-  Template pour la page d'analyse de peau
+  Dermadia AI Skin Analyzer - Page Template
+  Production-ready for Dawn theme
 {% endcomment %}
 
-<div class="page-width">
+{%- comment -%} Load CSS Asset {%- endcomment -%}
+{{ 'skin-analyzer.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} Render Section {%- endcomment -%}
+<div class="page-width page-width--narrow">
   {% section 'skin-analyzer-content' %}
 </div>
 
+{%- comment -%} Load JavaScript Asset (defer for performance) {%- endcomment -%}
+<script src="{{ 'skin-analyzer.js' | asset_url }}" defer></script>

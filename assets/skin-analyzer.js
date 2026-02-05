@@ -1,6 +1,6 @@
 /* ============================================
-   SKIN ANALYZER - JAVASCRIPT
-   Gestion de l'upload photo et communication avec n8n webhook
+   SKIN ANALYZER - PRODUCTION JAVASCRIPT
+   Hardened for Dermadia Shopify Store
    ============================================ */
 
 (function() {
@@ -10,25 +10,42 @@
   // CONFIGURATION
   // ============================================
   const CONFIG = {
-    // ⚠️ WEBHOOK URL - À configurer dans les metafields Shopify
-    // NE PAS mettre l'URL directement ici pour des raisons de sécurité
-    webhookUrl: null, // Sera chargé depuis les metafields
-    
-    // Paramètres de l'upload
-    maxFileSize: 10 * 1024 * 1024, // 10MB
+    webhookUrl: 'https://dermadia.app.n8n.cloud/webhook/image-analysis',
+
+    // Image optimization
+    maxImageWidth: 1200,
+    maxImageHeight: 1200,
+    imageQuality: 0.85,
+    maxFileSize: 10 * 1024 * 1024, // 10MB before compression
     acceptedFormats: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-    
-    // Timeout pour l'analyse
-    analysisTimeout: 60000, // 60 secondes
+
+    // Timeout and retry
+    analysisTimeout: 90000, // 90 seconds
+    retryAttempts: 2,
+    retryDelay: 2000,
+
+    // Rate limiting (client-side basic protection)
+    minTimeBetweenRequests: 10000, // 10 seconds
   };
 
   // ============================================
-  // DOM ELEMENTS
+  // STATE MANAGEMENT
+  // ============================================
+  const state = {
+    lastRequestTime: 0,
+    isAnalyzing: false,
+    abortController: null,
+    analysisCount: 0,
+  };
+
+  // ============================================
+  // DOM ELEMENTS CACHE
   // ============================================
   const elements = {
     startButtons: null,
     fileInput: null,
     uploadBox: null,
+    uploadArea: null,
     resultsSection: null,
     routineSection: null,
     productsSection: null,
@@ -38,32 +55,30 @@
   // INITIALIZATION
   // ============================================
   function init() {
-    // Charger l'URL du webhook depuis les metafields
-    loadWebhookUrl();
-    
-    // Récupérer les éléments DOM
-    cacheElements();
-    
-    // Créer l'input file caché
-    createFileInput();
-    
-    // Attacher les événements
-    attachEventListeners();
-    
-    console.log('🎨 Skin Analyzer initialized');
+    console.log('🎨 Dermadia Skin Analyzer - Initializing...');
+
+    // Wait for DOM to be fully loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+      initializeApp();
+    }
   }
 
-  // ============================================
-  // LOAD WEBHOOK URL FROM SHOPIFY METAFIELDS
-  // ============================================
-  function loadWebhookUrl() {
-    // Récupérer l'URL depuis un attribut data sur la page
-    const pageElement = document.getElementById('skin-analyzer-page');
-    if (pageElement && pageElement.dataset.webhookUrl) {
-      CONFIG.webhookUrl = pageElement.dataset.webhookUrl;
-    } else {
-      console.error('⚠️ Webhook URL not configured. Please add data-webhook-url attribute.');
-    }
+  function initializeApp() {
+    // Cache DOM elements
+    cacheElements();
+
+    // Create file input
+    createFileInput();
+
+    // Attach event listeners
+    attachEventListeners();
+
+    // Create toast container
+    createToastContainer();
+
+    console.log('✅ Skin Analyzer initialized successfully');
   }
 
   // ============================================
@@ -72,6 +87,7 @@
   function cacheElements() {
     elements.startButtons = document.querySelectorAll('.skin-start-analysis');
     elements.uploadBox = document.querySelector('.upload-box');
+    elements.uploadArea = document.querySelector('[data-upload-area]');
     elements.resultsSection = document.querySelector('[data-results-container]');
     elements.routineSection = document.querySelector('[data-routine-container]');
     elements.productsSection = document.querySelector('[data-products-container]');
@@ -86,150 +102,192 @@
     elements.fileInput.accept = CONFIG.acceptedFormats.join(',');
     elements.fileInput.style.display = 'none';
     elements.fileInput.id = 'skin-analyzer-file-input';
-    
-    if (elements.uploadBox) {
-      elements.uploadBox.appendChild(elements.fileInput);
-    }
+
+    const container = elements.uploadBox || elements.uploadArea || document.body;
+    container.appendChild(elements.fileInput);
   }
 
   // ============================================
   // ATTACH EVENT LISTENERS
   // ============================================
   function attachEventListeners() {
-    // Boutons "Commencer l'analyse"
+    // Start analysis buttons
     if (elements.startButtons) {
       elements.startButtons.forEach(button => {
         button.addEventListener('click', handleStartAnalysis);
       });
     }
 
-    // Input file
+    // File input change
     if (elements.fileInput) {
       elements.fileInput.addEventListener('change', handleFileSelect);
     }
 
-    // Drag & Drop sur la upload box
-    if (elements.uploadBox) {
-      elements.uploadBox.addEventListener('dragover', handleDragOver);
-      elements.uploadBox.addEventListener('dragleave', handleDragLeave);
-      elements.uploadBox.addEventListener('drop', handleDrop);
-    }
+    // Drag & drop on upload areas
+    const uploadAreas = [elements.uploadBox, elements.uploadArea].filter(Boolean);
+    uploadAreas.forEach(area => {
+      area.addEventListener('click', () => elements.fileInput?.click());
+      area.addEventListener('dragover', handleDragOver);
+      area.addEventListener('dragleave', handleDragLeave);
+      area.addEventListener('drop', handleDrop);
+    });
   }
 
   // ============================================
-  // HANDLE START ANALYSIS BUTTON
+  // HANDLE START ANALYSIS
   // ============================================
   function handleStartAnalysis(e) {
     e.preventDefault();
-    
-    if (!CONFIG.webhookUrl) {
-      showError('Configuration manquante. Veuillez contacter le support.');
+
+    // Rate limiting check
+    const now = Date.now();
+    const timeSinceLastRequest = now - state.lastRequestTime;
+
+    if (timeSinceLastRequest < CONFIG.minTimeBetweenRequests && state.lastRequestTime > 0) {
+      const remainingSeconds = Math.ceil((CONFIG.minTimeBetweenRequests - timeSinceLastRequest) / 1000);
+      showToast(`Veuillez attendre ${remainingSeconds} secondes avant une nouvelle analyse`, 'warning');
       return;
     }
-    
-    // Trigger file input
-    if (elements.fileInput) {
-      elements.fileInput.click();
+
+    if (state.isAnalyzing) {
+      showToast('Une analyse est déjà en cours...', 'warning');
+      return;
+    }
+
+    // Scroll to upload area if exists
+    if (elements.uploadArea) {
+      elements.uploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => elements.fileInput?.click(), 500);
+    } else {
+      elements.fileInput?.click();
     }
   }
 
   // ============================================
-  // HANDLE FILE SELECTION
+  // FILE SELECTION HANDLERS
   // ============================================
   function handleFileSelect(e) {
     const file = e.target.files[0];
-    
     if (file) {
       processFile(file);
     }
   }
 
-  // ============================================
-  // HANDLE DRAG OVER
-  // ============================================
   function handleDragOver(e) {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (elements.uploadBox) {
-      elements.uploadBox.style.borderColor = 'var(--color-accent)';
-      elements.uploadBox.style.backgroundColor = 'rgba(212, 165, 116, 0.05)';
-    }
+    e.currentTarget.style.borderColor = 'var(--color-accent, #d4a574)';
+    e.currentTarget.style.backgroundColor = 'rgba(212, 165, 116, 0.05)';
   }
 
-  // ============================================
-  // HANDLE DRAG LEAVE
-  // ============================================
   function handleDragLeave(e) {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (elements.uploadBox) {
-      elements.uploadBox.style.borderColor = 'var(--color-border)';
-      elements.uploadBox.style.backgroundColor = 'white';
-    }
+    e.currentTarget.style.borderColor = '';
+    e.currentTarget.style.backgroundColor = '';
   }
 
-  // ============================================
-  // HANDLE DROP
-  // ============================================
   function handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (elements.uploadBox) {
-      elements.uploadBox.style.borderColor = 'var(--color-border)';
-      elements.uploadBox.style.backgroundColor = 'white';
-    }
-    
+
+    e.currentTarget.style.borderColor = '';
+    e.currentTarget.style.backgroundColor = '';
+
     const files = e.dataTransfer.files;
-    
     if (files.length > 0) {
       processFile(files[0]);
     }
   }
 
   // ============================================
-  // PROCESS FILE
+  // FILE PROCESSING & VALIDATION
   // ============================================
-  function processFile(file) {
-    // Validation du type de fichier
+  async function processFile(file) {
+    // Validate file type
     if (!CONFIG.acceptedFormats.includes(file.type)) {
-      showError('Format de fichier non supporté. Utilisez JPG, PNG ou WEBP.');
+      showToast('Format non supporté. Utilisez JPG, PNG ou WEBP.', 'error');
       return;
     }
 
-    // Validation de la taille
+    // Validate file size
     if (file.size > CONFIG.maxFileSize) {
-      showError('Fichier trop volumineux. Maximum 10MB.');
+      showToast('Fichier trop volumineux. Maximum 10MB.', 'error');
       return;
     }
 
-    // Convertir en base64 et envoyer
-    convertToBase64(file)
-      .then(base64Image => {
-        sendToWebhook(base64Image, file.type);
-      })
-      .catch(error => {
-        console.error('Erreur de conversion:', error);
-        showError('Erreur lors du traitement de l\'image.');
-      });
+    try {
+      showLoading('Préparation de votre image...');
+
+      // Optimize image
+      const optimizedImage = await optimizeImage(file);
+
+      updateLoadingMessage('Analyse de votre peau en cours...');
+
+      // Send to webhook
+      await sendToWebhook(optimizedImage);
+
+    } catch (error) {
+      console.error('❌ Error processing file:', error);
+      hideLoading();
+      showToast('Erreur lors du traitement de l\'image. Veuillez réessayer.', 'error');
+    }
   }
 
   // ============================================
-  // CONVERT FILE TO BASE64
+  // IMAGE OPTIMIZATION
   // ============================================
-  function convertToBase64(file) {
+  function optimizeImage(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      
-      reader.onload = () => {
-        // Extraire uniquement la partie base64 (sans le préfixe data:image/...)
-        const base64 = reader.result.split(',')[1];
-        resolve(base64);
+
+      reader.onload = (e) => {
+        const img = new Image();
+
+        img.onload = () => {
+          try {
+            // Calculate new dimensions
+            let width = img.width;
+            let height = img.height;
+
+            if (width > CONFIG.maxImageWidth || height > CONFIG.maxImageHeight) {
+              const ratio = Math.min(
+                CONFIG.maxImageWidth / width,
+                CONFIG.maxImageHeight / height
+              );
+              width = Math.floor(width * ratio);
+              height = Math.floor(height * ratio);
+            }
+
+            // Create canvas and draw resized image
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Convert to base64
+            const base64 = canvas.toDataURL('image/jpeg', CONFIG.imageQuality);
+
+            console.log('📸 Image optimized:', {
+              original: `${img.width}x${img.height}`,
+              optimized: `${width}x${height}`,
+              originalSize: `${(file.size / 1024).toFixed(1)}KB`,
+              optimizedSize: `${(base64.length * 0.75 / 1024).toFixed(1)}KB`
+            });
+
+            resolve(base64);
+          } catch (error) {
+            reject(error);
+          }
+        };
+
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.src = e.target.result;
       };
-      
-      reader.onerror = reject;
+
+      reader.onerror = () => reject(new Error('Failed to read file'));
       reader.readAsDataURL(file);
     });
   }
@@ -237,256 +295,504 @@
   // ============================================
   // SEND TO N8N WEBHOOK
   // ============================================
-  function sendToWebhook(base64Image, mimeType) {
-    // Afficher le loading
-    showLoading('Analyse de ta peau en cours...');
+  async function sendToWebhook(base64Image) {
+    state.isAnalyzing = true;
+    state.lastRequestTime = Date.now();
+    state.analysisCount++;
 
-    // Préparer les données
-    const payload = {
-      image: base64Image,
-      mimeType: mimeType,
-      timestamp: new Date().toISOString(),
-      // Informations optionnelles (peuvent être ajoutées)
-      userAgent: navigator.userAgent,
-      locale: navigator.language || 'fr-FR',
-    };
-
-    // Envoyer au webhook avec timeout
+    // Create abort controller for timeout
+    state.abortController = new AbortController();
     const timeoutId = setTimeout(() => {
-      hideLoading();
-      showError('L\'analyse prend trop de temps. Veuillez réessayer.');
+      state.abortController.abort();
     }, CONFIG.analysisTimeout);
 
-    fetch(CONFIG.webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-      .then(response => {
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        return response.json();
-      })
-      .then(data => {
-        hideLoading();
-        handleAnalysisResponse(data);
-      })
-      .catch(error => {
-        clearTimeout(timeoutId);
-        hideLoading();
-        console.error('Erreur webhook:', error);
-        showError('Une erreur est survenue. Veuillez réessayer.');
+    // Prepare payload matching n8n workflow expectations
+    const payload = {
+      shop: window.Shopify?.shop || 'dermadiacosmetique.myshopify.com',
+      sessionId: `web_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      image: base64Image,
+      fileName: `skin-analysis-${Date.now()}.jpg`,
+      context: {
+        locale: document.documentElement.lang || 'fr',
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    try {
+      const response = await fetch(CONFIG.webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        signal: state.abortController.signal
       });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      hideLoading();
+
+      if (data.success === false) {
+        throw new Error(data.error || 'Analysis failed');
+      }
+
+      handleAnalysisSuccess(data);
+
+    } catch (error) {
+      clearTimeout(timeoutId);
+      hideLoading();
+
+      if (error.name === 'AbortError') {
+        showToast('L\'analyse prend trop de temps. Veuillez réessayer avec une photo plus claire.', 'error');
+      } else {
+        console.error('❌ Webhook error:', error);
+        showToast('Une erreur est survenue. Veuillez réessayer dans quelques instants.', 'error');
+      }
+    } finally {
+      state.isAnalyzing = false;
+      state.abortController = null;
+    }
   }
 
   // ============================================
-  // HANDLE ANALYSIS RESPONSE
+  // HANDLE SUCCESSFUL ANALYSIS
   // ============================================
-  function handleAnalysisResponse(data) {
-    console.log('📊 Analysis received:', data);
+  function handleAnalysisSuccess(data) {
+    console.log('✅ Analysis received:', data);
 
-    // Injecter les résultats dans le DOM
-    if (data.skinType) {
-      updateResults(data);
+    // Parse Claude's message
+    const parsedData = parseClaudeResponse(data);
+
+    // Update UI sections
+    updateResults(parsedData);
+    updateRoutine(parsedData);
+    updateProducts(data.products || data.recommendations || []);
+
+    // Show sections
+    showSection(elements.resultsSection);
+    showSection(elements.routineSection);
+
+    if ((data.products || data.recommendations || []).length > 0) {
+      showSection(elements.productsSection);
     }
 
-    if (data.routine) {
-      updateRoutine(data.routine);
+    // Scroll to results
+    setTimeout(() => {
+      elements.resultsSection?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 300);
+
+    showToast('✨ Analyse terminée ! Découvrez vos résultats ci-dessous.', 'success');
+  }
+
+  // ============================================
+  // PARSE CLAUDE'S TEXT RESPONSE
+  // ============================================
+  function parseClaudeResponse(data) {
+    const message = data.message || data.analysis || '';
+
+    // Extract skin type
+    let skinType = 'Type de peau';
+    const skinTypePatterns = [
+      /peau (grasse|sèche|mixte|normale|sensible)/i,
+      /(grasse|sèche|mixte|normale|sensible)/i
+    ];
+
+    for (const pattern of skinTypePatterns) {
+      const match = message.match(pattern);
+      if (match) {
+        skinType = `Peau ${match[1].toLowerCase()}`;
+        break;
+      }
     }
 
-    if (data.products) {
-      updateProducts(data.products);
+    // Extract Dermadia range recommendation
+    let recommendedRange = '';
+    const rangePatterns = [
+      /gamme (Sebocylique|Retilift|Vitalight|Hydramelon)/gi,
+      /(Sebocylique|Retilift|Vitalight|Hydramelon)/gi
+    ];
+
+    for (const pattern of rangePatterns) {
+      const match = message.match(pattern);
+      if (match) {
+        recommendedRange = match[1] || match[0];
+        break;
+      }
     }
 
-    // Scroll vers les résultats
-    scrollToResults();
-    
-    // Afficher un message de succès
-    showSuccess('Analyse terminée ! Découvre tes résultats ci-dessous.');
+    // Split message into sections
+    const lines = message.split('\n').filter(line => line.trim());
+
+    // Extract observations (first 2-3 sentences or bullets)
+    const observations = [];
+    const priorities = [];
+
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed.match(/^[-•*]/)) {
+        // Bullet point
+        const cleaned = trimmed.replace(/^[-•*]\s*/, '');
+        if (cleaned) observations.push(cleaned);
+      } else if (trimmed.match(/présence|aspect|teint|peau|rides|taches|sécheresse/i)) {
+        // Skin-related sentence
+        if (observations.length < 4) observations.push(trimmed);
+      }
+    });
+
+    // Generate priorities based on content
+    if (message.match(/acné|imperfections|sébum/i)) {
+      priorities.push('Réguler l\'excès de sébum et les imperfections');
+    }
+    if (message.match(/rides|ridules|relâchement|âge/i)) {
+      priorities.push('Atténuer les signes de l\'âge');
+    }
+    if (message.match(/taches|teint terne|éclat/i)) {
+      priorities.push('Unifier le teint et apporter de l\'éclat');
+    }
+    if (message.match(/sécheresse|déshydratation|tiraillements/i)) {
+      priorities.push('Hydrater et nourrir en profondeur');
+    }
+    if (message.match(/sensible|rougeurs|irritations/i)) {
+      priorities.push('Apaiser et renforcer la barrière cutanée');
+    }
+
+    // Fallback
+    if (observations.length === 0) {
+      observations.push('Analyse détaillée de votre peau effectuée');
+      observations.push(message.substring(0, 200) + '...');
+    }
+
+    if (priorities.length === 0) {
+      priorities.push('Routine personnalisée adaptée à votre type de peau');
+    }
+
+    return {
+      skinType,
+      recommendedRange,
+      globalAppearance: message,
+      observations: observations.slice(0, 4),
+      priorities: priorities.slice(0, 3),
+      fullMessage: message
+    };
   }
 
   // ============================================
   // UPDATE RESULTS SECTION
   // ============================================
-  function updateResults(data) {
+  function updateResults(parsedData) {
     if (!elements.resultsSection) return;
 
-    // Remplacer les placeholders
-    let html = elements.resultsSection.innerHTML;
-    
-    html = html.replace('{{skin_type_label}}', data.skinType || 'Type de peau');
-    html = html.replace('{{global_appearance}}', data.globalAppearance || '');
-    
-    // Observations
-    if (data.observations && Array.isArray(data.observations)) {
-      const observationsList = data.observations
-        .map(obs => `<li>${obs}</li>`)
-        .join('');
-      html = html.replace('{{main_observations}}', observationsList);
+    // Update skin type
+    const skinTypeEl = elements.resultsSection.querySelector('.skin-type-label, [data-skin-type]');
+    if (skinTypeEl) {
+      skinTypeEl.textContent = parsedData.skinType;
     }
-    
-    // Priorités
-    if (data.priorities && Array.isArray(data.priorities)) {
-      const prioritiesList = data.priorities
-        .map(priority => `<li>${priority}</li>`)
-        .join('');
-      html = html.replace('{{care_priorities}}', prioritiesList);
+
+    // Update recommended range
+    const rangeEl = elements.resultsSection.querySelector('[data-recommended-range]');
+    if (rangeEl && parsedData.recommendedRange) {
+      rangeEl.textContent = `Gamme recommandée: ${parsedData.recommendedRange}`;
+      rangeEl.style.display = 'block';
     }
-    
-    elements.resultsSection.innerHTML = html;
-    elements.resultsSection.style.display = 'block';
+
+    // Update global appearance
+    const appearanceEl = elements.resultsSection.querySelector('.global-appearance, [data-global-appearance]');
+    if (appearanceEl) {
+      appearanceEl.textContent = parsedData.globalAppearance;
+    }
+
+    // Update observations list
+    const observationsEl = elements.resultsSection.querySelector('.observations-list, [data-observations-list]');
+    if (observationsEl && parsedData.observations.length > 0) {
+      observationsEl.innerHTML = parsedData.observations
+        .map(obs => `<li>${escapeHtml(obs)}</li>`)
+        .join('');
+    }
+
+    // Update priorities list
+    const prioritiesEl = elements.resultsSection.querySelector('.priorities-list, [data-priorities-list]');
+    if (prioritiesEl && parsedData.priorities.length > 0) {
+      prioritiesEl.innerHTML = parsedData.priorities
+        .map(priority => `<li>${escapeHtml(priority)}</li>`)
+        .join('');
+    }
   }
 
   // ============================================
   // UPDATE ROUTINE SECTION
   // ============================================
-  function updateRoutine(routine) {
+  function updateRoutine(parsedData) {
     if (!elements.routineSection) return;
 
-    let html = elements.routineSection.innerHTML;
-    
-    // Routine matin
-    if (routine.morning && Array.isArray(routine.morning)) {
-      routine.morning.forEach((step, index) => {
-        const num = index + 1;
-        html = html.replace(`{{morning_step_${num}_role}}`, step.role || '');
-        html = html.replace(`{{morning_step_${num}_benefit}}`, step.benefit || '');
-        html = html.replace(`{{morning_step_${num}_tip}}`, step.tip || '');
-      });
+    // Generate smart routine based on skin type and range
+    const routine = generateSmartRoutine(parsedData);
+
+    // Update morning routine
+    const morningList = elements.routineSection.querySelector('.routine-morning .routine-steps, [data-morning-routine]');
+    if (morningList) {
+      morningList.innerHTML = routine.morning
+        .map((step, index) => `
+          <li class="routine-step">
+            <span class="step-role">${escapeHtml(step.role)}</span>
+            <p class="step-benefit">${escapeHtml(step.benefit)}</p>
+            ${step.tip ? `<p class="step-tip">${escapeHtml(step.tip)}</p>` : ''}
+          </li>
+        `)
+        .join('');
     }
-    
-    // Routine soir
-    if (routine.evening && Array.isArray(routine.evening)) {
-      routine.evening.forEach((step, index) => {
-        const num = index + 1;
-        html = html.replace(`{{evening_step_${num}_role}}`, step.role || '');
-        html = html.replace(`{{evening_step_${num}_benefit}}`, step.benefit || '');
-        html = html.replace(`{{evening_step_${num}_tip}}`, step.tip || '');
-      });
+
+    // Update evening routine
+    const eveningList = elements.routineSection.querySelector('.routine-evening .routine-steps, [data-evening-routine]');
+    if (eveningList) {
+      eveningList.innerHTML = routine.evening
+        .map((step, index) => `
+          <li class="routine-step">
+            <span class="step-role">${escapeHtml(step.role)}</span>
+            <p class="step-benefit">${escapeHtml(step.benefit)}</p>
+            ${step.tip ? `<p class="step-tip">${escapeHtml(step.tip)}</p>` : ''}
+          </li>
+        `)
+        .join('');
     }
-    
-    elements.routineSection.innerHTML = html;
-    elements.routineSection.style.display = 'block';
+  }
+
+  // ============================================
+  // GENERATE SMART ROUTINE
+  // ============================================
+  function generateSmartRoutine(parsedData) {
+    const range = (parsedData.recommendedRange || '').toLowerCase();
+    const message = (parsedData.fullMessage || '').toLowerCase();
+
+    // Base routine
+    const morning = [
+      { role: 'Nettoyage', benefit: 'Nettoyer délicatement sans agresser', tip: 'Masser en mouvements circulaires puis rincer à l\'eau tiède' },
+      { role: 'Sérum', benefit: 'Cibler vos besoins spécifiques', tip: 'Appliquer 2-3 gouttes sur peau humide' },
+      { role: 'Hydratation', benefit: 'Protéger et hydrater toute la journée', tip: 'Masser jusqu\'à absorption complète' },
+      { role: 'Protection SPF', benefit: 'Protéger contre les UV et le vieillissement', tip: 'Indispensable même par temps nuageux' }
+    ];
+
+    const evening = [
+      { role: 'Démaquillage', benefit: 'Retirer toutes les impuretés de la journée', tip: 'Insister sur les zones maquillées' },
+      { role: 'Nettoyage', benefit: 'Purifier en profondeur', tip: 'Double nettoyage pour une peau parfaitement propre' },
+      { role: 'Sérum nuit', benefit: 'Booster la régénération nocturne', tip: 'La nuit est le moment idéal pour les actifs concentrés' },
+      { role: 'Crème nuit', benefit: 'Nourrir et réparer pendant le sommeil', tip: 'Appliquer en mouvements ascendants' }
+    ];
+
+    // Customize based on range
+    if (range.includes('sebocylique')) {
+      morning[1].benefit = 'Réguler le sébum et affiner le grain de peau';
+      evening[2].benefit = 'Purifier et prévenir les imperfections';
+      evening.push({
+        role: 'Soin ciblé',
+        benefit: 'Traiter localement les imperfections',
+        tip: 'Appliquer directement sur les zones concernées'
+      });
+    } else if (range.includes('retilift')) {
+      morning[1].benefit = 'Lifter et lisser les rides';
+      evening[2].benefit = 'Stimuler le renouvellement cellulaire';
+      evening.push({
+        role: 'Soin contour des yeux',
+        benefit: 'Atténuer rides et cernes',
+        tip: 'Tapoter délicatement du bout des doigts'
+      });
+    } else if (range.includes('vitalight')) {
+      morning[1].benefit = 'Illuminer et unifier le teint';
+      evening[2].benefit = 'Estomper les taches et raviver l\'éclat';
+      morning[3].benefit = 'Protéger contre les taches pigmentaires';
+    } else if (range.includes('hydramelon')) {
+      morning[1].benefit = 'Hydrater intensément et apaiser';
+      morning[2].benefit = 'Confort et douceur longue durée';
+      evening[2].benefit = 'Régénérer et restaurer la barrière cutanée';
+    }
+
+    return { morning, evening };
   }
 
   // ============================================
   // UPDATE PRODUCTS SECTION
   // ============================================
   function updateProducts(products) {
-    if (!elements.productsSection || !Array.isArray(products)) return;
+    if (!elements.productsSection || !Array.isArray(products) || products.length === 0) {
+      return;
+    }
 
-    let html = elements.productsSection.innerHTML;
-    
-    products.forEach((product, index) => {
-      const num = index + 1;
-      html = html.replace(`{{product_${num}_title}}`, product.title || '');
-      html = html.replace(`{{product_${num}_type}}`, product.type || '');
-      html = html.replace(`{{product_${num}_short_benefit}}`, product.benefit || '');
-      html = html.replace(`{{product_${num}_price}}`, product.price || '');
-      html = html.replace(`{{product_${num}_handle}}`, product.handle || '');
+    const productsGrid = elements.productsSection.querySelector('.products-grid, [data-products-grid]');
+    if (!productsGrid) return;
+
+    // Clear existing products
+    productsGrid.innerHTML = '';
+
+    // Create product cards
+    products.slice(0, 6).forEach(product => {
+      const card = createProductCard(product);
+      productsGrid.appendChild(card);
     });
-    
-    elements.productsSection.innerHTML = html;
-    elements.productsSection.style.display = 'block';
-    
-    // Attacher les événements sur les boutons produits
-    attachProductButtonEvents();
   }
 
   // ============================================
-  // ATTACH PRODUCT BUTTON EVENTS
+  // CREATE PRODUCT CARD
   // ============================================
-  function attachProductButtonEvents() {
-    const productButtons = document.querySelectorAll('[data-product-handle]');
-    
-    productButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const handle = this.getAttribute('data-product-handle');
-        if (handle) {
-          window.location.href = `/products/${handle}`;
-        }
+  function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    const imageUrl = product.image || product.featuredImage?.url || '';
+    const price = product.priceFormatted || product.price || '';
+    const title = escapeHtml(product.title || 'Produit Dermadia');
+    const description = escapeHtml((product.description || '').substring(0, 100));
+    const handle = product.handle || '';
+
+    card.innerHTML = `
+      ${imageUrl ? `
+        <div class="product-image-modern">
+          <img src="${escapeHtml(imageUrl)}" alt="${title}" loading="lazy">
+        </div>
+      ` : ''}
+      <div class="product-info-modern">
+        <h3 class="product-name-modern">${title}</h3>
+        ${description ? `<p class="product-description-modern">${description}</p>` : ''}
+        <div class="product-footer-modern">
+          ${price ? `<span class="product-price-modern">${escapeHtml(price)}</span>` : ''}
+          <button class="btn-add-modern" data-product-handle="${escapeHtml(handle)}">
+            Découvrir
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Attach click handler to button
+    const button = card.querySelector('[data-product-handle]');
+    if (button && handle) {
+      button.addEventListener('click', () => {
+        window.location.href = `/products/${handle}`;
       });
-    });
+    }
+
+    return card;
   }
 
   // ============================================
-  // SCROLL TO RESULTS
+  // SHOW/HIDE SECTIONS
   // ============================================
-  function scrollToResults() {
-    if (elements.resultsSection) {
-      setTimeout(() => {
-        elements.resultsSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      }, 300);
+  function showSection(section) {
+    if (section) {
+      section.style.display = 'block';
+      section.classList.remove('hidden');
+      section.classList.add('visible');
+    }
+  }
+
+  function hideSection(section) {
+    if (section) {
+      section.style.display = 'none';
+      section.classList.add('hidden');
+      section.classList.remove('visible');
     }
   }
 
   // ============================================
-  // SHOW LOADING OVERLAY
+  // LOADING OVERLAY
   // ============================================
   function showLoading(message = 'Chargement...') {
-    // Supprimer l'ancien overlay s'il existe
     hideLoading();
-    
+
     const overlay = document.createElement('div');
     overlay.className = 'loading-overlay';
     overlay.id = 'skin-analyzer-loading';
-    
     overlay.innerHTML = `
-      <div class="loading"></div>
-      <div class="loading-text">${message}</div>
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">${escapeHtml(message)}</div>
+      </div>
     `;
-    
+
     document.body.appendChild(overlay);
-    
-    // Empêcher le scroll
     document.body.style.overflow = 'hidden';
   }
 
-  // ============================================
-  // HIDE LOADING OVERLAY
-  // ============================================
+  function updateLoadingMessage(message) {
+    const loadingText = document.querySelector('#skin-analyzer-loading .loading-text');
+    if (loadingText) {
+      loadingText.textContent = message;
+    }
+  }
+
   function hideLoading() {
     const overlay = document.getElementById('skin-analyzer-loading');
     if (overlay) {
       overlay.remove();
     }
-    
-    // Réactiver le scroll
     document.body.style.overflow = '';
   }
 
   // ============================================
-  // SHOW ERROR MESSAGE
+  // TOAST NOTIFICATIONS
   // ============================================
-  function showError(message) {
-    alert(`❌ ${message}`);
-    // Ou utiliser un système de notification plus élégant
+  function createToastContainer() {
+    if (document.getElementById('toast-container')) return;
+
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) {
+      createToastContainer();
+      return showToast(message, type);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    const icons = {
+      success: '✓',
+      error: '✕',
+      warning: '⚠',
+      info: 'ℹ'
+    };
+
+    toast.innerHTML = `
+      <span class="toast-icon">${icons[type] || icons.info}</span>
+      <span class="toast-message">${escapeHtml(message)}</span>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    setTimeout(() => toast.classList.add('toast-show'), 10);
+
+    // Auto remove
+    setTimeout(() => {
+      toast.classList.remove('toast-show');
+      setTimeout(() => toast.remove(), 300);
+    }, 5000);
   }
 
   // ============================================
-  // SHOW SUCCESS MESSAGE
+  // UTILITY: ESCAPE HTML
   // ============================================
-  function showSuccess(message) {
-    console.log(`✅ ${message}`);
-    // Ou afficher une notification
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   // ============================================
-  // START THE APP
+  // START APPLICATION
   // ============================================
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  init();
 
 })();
