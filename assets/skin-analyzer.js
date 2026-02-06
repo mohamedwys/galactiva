@@ -375,7 +375,7 @@
     updateRoutine(parsedData);
     updateProducts(data.products || data.recommendations || []);
 
-    // Show sections
+    // Show sections with animation
     showSection(elements.resultsSection);
     showSection(elements.routineSection);
 
@@ -383,15 +383,34 @@
       showSection(elements.productsSection);
     }
 
+    // Add success animation to result card
+    setTimeout(() => {
+      const resultCard = elements.resultsSection?.querySelector('.result-card-modern');
+      if (resultCard) {
+        resultCard.style.opacity = '0';
+        resultCard.style.transform = 'translateY(20px)';
+        resultCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+
+        setTimeout(() => {
+          resultCard.style.opacity = '1';
+          resultCard.style.transform = 'translateY(0)';
+        }, 50);
+      }
+    }, 100);
+
     // Scroll to results
     setTimeout(() => {
       elements.resultsSection?.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
       });
-    }, 300);
+    }, 400);
 
+    // Success feedback
     showToast('✨ Analyse terminée ! Découvrez vos résultats ci-dessous.', 'success');
+
+    // Optional: Add confetti effect (simple CSS-based celebration)
+    createSuccessCelebration();
   }
 
   // ============================================
@@ -505,10 +524,18 @@
       rangeEl.style.display = 'block';
     }
 
-    // Update global appearance
-    const appearanceEl = elements.resultsSection.querySelector('.global-appearance, [data-global-appearance]');
+    // Update global appearance (split into paragraphs for readability)
+    const appearanceEl = elements.resultsSection.querySelector('.global-appearance, [data-global-appearance], .skin-description-modern');
     if (appearanceEl) {
-      appearanceEl.textContent = parsedData.globalAppearance;
+      // Split into paragraphs if contains line breaks
+      const paragraphs = parsedData.globalAppearance.split('\n').filter(p => p.trim());
+      if (paragraphs.length > 1) {
+        appearanceEl.innerHTML = paragraphs
+          .map(para => `<p>${escapeHtml(para.trim())}</p>`)
+          .join('');
+      } else {
+        appearanceEl.textContent = parsedData.globalAppearance;
+      }
     }
 
     // Update observations list
@@ -703,6 +730,9 @@
   // ============================================
   // LOADING OVERLAY
   // ============================================
+  let loadingProgressInterval = null;
+  let loadingStepIndex = 0;
+
   function showLoading(message = 'Chargement...') {
     hideLoading();
 
@@ -711,13 +741,56 @@
     overlay.id = 'skin-analyzer-loading';
     overlay.innerHTML = `
       <div class="loading-content">
+        <div class="loading-brand">✨</div>
         <div class="loading-spinner"></div>
         <div class="loading-text">${escapeHtml(message)}</div>
+        <div class="loading-subtext">Notre IA analyse votre peau avec précision...</div>
+        <div class="loading-progress">
+          <div class="loading-step active" data-step="0">
+            <div class="loading-step-icon">1</div>
+            <div class="loading-step-text">Optimisation de l'image</div>
+          </div>
+          <div class="loading-step" data-step="1">
+            <div class="loading-step-icon">2</div>
+            <div class="loading-step-text">Analyse IA en cours</div>
+          </div>
+          <div class="loading-step" data-step="2">
+            <div class="loading-step-icon">3</div>
+            <div class="loading-step-text">Recherche des produits adaptés</div>
+          </div>
+          <div class="loading-step" data-step="3">
+            <div class="loading-step-icon">4</div>
+            <div class="loading-step-text">Génération de votre routine</div>
+          </div>
+        </div>
       </div>
     `;
 
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
+
+    // Animate progress steps
+    loadingStepIndex = 0;
+    loadingProgressInterval = setInterval(() => {
+      const currentStep = overlay.querySelector(`.loading-step[data-step="${loadingStepIndex}"]`);
+      if (currentStep) {
+        currentStep.classList.remove('active');
+        currentStep.classList.add('complete');
+
+        const icon = currentStep.querySelector('.loading-step-icon');
+        icon.textContent = '✓';
+      }
+
+      loadingStepIndex++;
+      const nextStep = overlay.querySelector(`.loading-step[data-step="${loadingStepIndex}"]`);
+      if (nextStep) {
+        nextStep.classList.add('active');
+      }
+
+      if (loadingStepIndex >= 4) {
+        clearInterval(loadingProgressInterval);
+      }
+    }, 4000); // Each step takes 4 seconds
   }
 
   function updateLoadingMessage(message) {
@@ -728,11 +801,25 @@
   }
 
   function hideLoading() {
+    // Clear interval
+    if (loadingProgressInterval) {
+      clearInterval(loadingProgressInterval);
+      loadingProgressInterval = null;
+    }
+
     const overlay = document.getElementById('skin-analyzer-loading');
     if (overlay) {
-      overlay.remove();
+      // Fade out
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.3s ease-out';
+
+      setTimeout(() => {
+        overlay.remove();
+        document.body.style.overflow = '';
+      }, 300);
+    } else {
+      document.body.style.overflow = '';
     }
-    document.body.style.overflow = '';
   }
 
   // ============================================
@@ -779,6 +866,60 @@
       toast.classList.remove('toast-show');
       setTimeout(() => toast.remove(), 300);
     }, 5000);
+  }
+
+  // ============================================
+  // SUCCESS CELEBRATION
+  // ============================================
+  function createSuccessCelebration() {
+    // Create simple confetti effect
+    const container = document.createElement('div');
+    container.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    `;
+
+    // Create 20 confetti pieces
+    for (let i = 0; i < 20; i++) {
+      const confetti = document.createElement('div');
+      confetti.textContent = ['✨', '⭐', '🌟', '💫'][Math.floor(Math.random() * 4)];
+      confetti.style.cssText = `
+        position: absolute;
+        font-size: ${Math.random() * 20 + 15}px;
+        left: ${Math.random() * 100}%;
+        top: -50px;
+        animation: confettiFall ${Math.random() * 2 + 2}s ease-out forwards;
+        opacity: 0.8;
+      `;
+      container.appendChild(confetti);
+    }
+
+    // Add keyframe animation
+    if (!document.getElementById('confetti-style')) {
+      const style = document.createElement('style');
+      style.id = 'confetti-style';
+      style.textContent = `
+        @keyframes confettiFall {
+          to {
+            transform: translateY(100vh) rotate(${Math.random() * 360}deg);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(container);
+
+    // Remove after animation
+    setTimeout(() => {
+      container.remove();
+    }, 4000);
   }
 
   // ============================================
