@@ -649,21 +649,47 @@
   // UPDATE PRODUCTS SECTION
   // ============================================
   function updateProducts(products) {
-    if (!elements.productsSection || !Array.isArray(products) || products.length === 0) {
+    console.log('[Products] Received products:', products);
+
+    if (!elements.productsSection) {
+      console.warn('[Products] Products section element not found');
+      return;
+    }
+
+    if (!Array.isArray(products)) {
+      console.warn('[Products] Products is not an array:', typeof products);
+      return;
+    }
+
+    if (products.length === 0) {
+      console.log('[Products] No products to display');
       return;
     }
 
     const productsGrid = elements.productsSection.querySelector('.products-grid, [data-products-grid]');
-    if (!productsGrid) return;
+    if (!productsGrid) {
+      console.error('[Products] Products grid element not found');
+      return;
+    }
 
     // Clear existing products
     productsGrid.innerHTML = '';
 
-    // Create product cards
-    products.slice(0, 6).forEach(product => {
-      const card = createProductCard(product);
-      productsGrid.appendChild(card);
+    // Create product cards (max 6)
+    const productsToShow = products.slice(0, 6);
+    console.log(`[Products] Rendering ${productsToShow.length} product cards`);
+
+    productsToShow.forEach((product, index) => {
+      try {
+        const card = createProductCard(product);
+        productsGrid.appendChild(card);
+        console.log(`[Products] Card ${index + 1} rendered:`, product.title || 'Untitled');
+      } catch (error) {
+        console.error(`[Products] Error creating card ${index + 1}:`, error, product);
+      }
     });
+
+    console.log('[Products] All product cards rendered successfully');
   }
 
   // ============================================
@@ -673,8 +699,30 @@
     const card = document.createElement('div');
     card.className = 'product-card';
 
-    const imageUrl = product.image || product.featuredImage?.url || '';
-    const price = product.priceFormatted || product.price || '';
+    // Handle multiple image URL formats from n8n webhook
+    let imageUrl = '';
+    if (product.image) {
+      imageUrl = product.image;
+    } else if (product.featuredImage?.url) {
+      imageUrl = product.featuredImage.url;
+    } else if (product.featured_image) {
+      imageUrl = product.featured_image;
+    } else if (product.images && product.images.length > 0) {
+      imageUrl = product.images[0].src || product.images[0];
+    }
+
+    // Ensure Shopify CDN images have proper sizing
+    if (imageUrl && imageUrl.includes('cdn.shopify.com')) {
+      // Remove any existing size parameters
+      imageUrl = imageUrl.replace(/(_\d+x\d+|\d+x\d+|_\d+x|x\d+)\.(jpg|jpeg|png|webp|gif)/i, '.$2');
+      // Add consistent size parameter (720px width for product cards)
+      if (!imageUrl.includes('?')) {
+        imageUrl += '?width=720';
+      }
+    }
+
+    // Handle price formatting
+    const price = product.priceFormatted || product.price_formatted || product.price || '';
     const title = escapeHtml(product.title || 'Produit Dermadia');
     const description = escapeHtml((product.description || '').substring(0, 100));
     const handle = product.handle || '';
@@ -682,9 +730,19 @@
     card.innerHTML = `
       ${imageUrl ? `
         <div class="product-image-modern">
-          <img src="${escapeHtml(imageUrl)}" alt="${title}" loading="lazy">
+          <img src="${escapeHtml(imageUrl)}" alt="${title}" loading="lazy" width="720" height="720">
         </div>
-      ` : ''}
+      ` : `
+        <div class="product-image-modern">
+          <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f8f8f8; color: #666;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+        </div>
+      `}
       <div class="product-info-modern">
         <h3 class="product-name-modern">${title}</h3>
         ${description ? `<p class="product-description-modern">${description}</p>` : ''}
