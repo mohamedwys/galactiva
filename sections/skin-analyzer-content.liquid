@@ -1221,24 +1221,15 @@
       assign hero_sizes = '100vw'
       assign hero_fetch_priority = 'high'
     -%}
-    <div class="hero-image-container {% unless section.settings.hero_image != blank %}hero-gradient-fallback{% endunless %}">
-      {%- if section.settings.hero_image != blank -%}
-        {%- liquid
-          assign hero_image_height = section.settings.hero_image.width | divided_by: section.settings.hero_image.aspect_ratio
-        -%}
-        {{ section.settings.hero_image
-          | image_url: width: 3840
-          | image_tag:
-            width: section.settings.hero_image.width,
-            height: hero_image_height,
-            class: 'hero-main-image',
-            sizes: hero_sizes,
-            widths: hero_widths,
-            fetchpriority: hero_fetch_priority
-        }}
-      {%- else -%}
-        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg hero-main-image' }}
-      {%- endif -%}
+    <div class="hero-image-container">
+      <img
+        src="{{ 'hero-skin-analyzer.jpg' | asset_url }}"
+        alt="Dermadia AI Skin Analyzer"
+        class="hero-main-image"
+        width="1920"
+        height="1080"
+        fetchpriority="high"
+      >
     </div>
 
     <div class="hero-overlay"></div>
