@@ -100,6 +100,7 @@
     elements.fileInput = document.createElement('input');
     elements.fileInput.type = 'file';
     elements.fileInput.accept = CONFIG.acceptedFormats.join(',');
+    elements.fileInput.capture = 'user'; // Prefer front camera for selfies
     elements.fileInput.style.display = 'none';
     elements.fileInput.id = 'skin-analyzer-file-input';
 
@@ -154,13 +155,119 @@
       return;
     }
 
-    // Scroll to upload area if exists
-    if (elements.uploadArea) {
-      elements.uploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => elements.fileInput?.click(), 500);
-    } else {
-      elements.fileInput?.click();
-    }
+    // Show photo choice modal
+    showPhotoChoiceModal();
+  }
+
+  // ============================================
+  // SHOW PHOTO CHOICE MODAL
+  // ============================================
+  function showPhotoChoiceModal() {
+    const modal = document.createElement('div');
+    modal.className = 'photo-choice-modal';
+    modal.innerHTML = `
+      <div class="photo-choice-overlay"></div>
+      <div class="photo-choice-content">
+        <h3 class="photo-choice-title">Choisir une photo</h3>
+        <p class="photo-choice-subtitle">Comment souhaitez-vous ajouter votre photo ?</p>
+
+        <div class="photo-choice-buttons">
+          <button class="photo-choice-btn photo-choice-camera" data-choice="camera">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span>Prendre une photo</span>
+          </button>
+
+          <button class="photo-choice-btn photo-choice-gallery" data-choice="gallery">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>Choisir depuis ma galerie</span>
+          </button>
+        </div>
+
+        <button class="photo-choice-close" aria-label="Fermer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    // Animate in
+    setTimeout(() => modal.classList.add('photo-choice-modal-active'), 10);
+
+    // Event listeners
+    const cameraBtn = modal.querySelector('[data-choice="camera"]');
+    const galleryBtn = modal.querySelector('[data-choice="gallery"]');
+    const closeBtn = modal.querySelector('.photo-choice-close');
+    const overlay = modal.querySelector('.photo-choice-overlay');
+
+    cameraBtn.addEventListener('click', () => {
+      closePhotoChoiceModal(modal);
+      openCamera();
+    });
+
+    galleryBtn.addEventListener('click', () => {
+      closePhotoChoiceModal(modal);
+      openGallery();
+    });
+
+    closeBtn.addEventListener('click', () => closePhotoChoiceModal(modal));
+    overlay.addEventListener('click', () => closePhotoChoiceModal(modal));
+  }
+
+  function closePhotoChoiceModal(modal) {
+    modal.classList.remove('photo-choice-modal-active');
+    document.body.style.overflow = '';
+    setTimeout(() => modal.remove(), 300);
+  }
+
+  function openCamera() {
+    // Create a temporary file input with camera capture
+    const cameraInput = document.createElement('input');
+    cameraInput.type = 'file';
+    cameraInput.accept = 'image/*';
+    cameraInput.capture = 'user'; // Front camera for selfies
+    cameraInput.style.display = 'none';
+
+    cameraInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        processFile(file);
+      }
+      cameraInput.remove();
+    });
+
+    document.body.appendChild(cameraInput);
+    cameraInput.click();
+  }
+
+  function openGallery() {
+    // Create a temporary file input without capture attribute
+    const galleryInput = document.createElement('input');
+    galleryInput.type = 'file';
+    galleryInput.accept = CONFIG.acceptedFormats.join(',');
+    galleryInput.style.display = 'none';
+
+    galleryInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        processFile(file);
+      }
+      galleryInput.remove();
+    });
+
+    document.body.appendChild(galleryInput);
+    galleryInput.click();
   }
 
   // ============================================
