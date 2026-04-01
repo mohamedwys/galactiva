@@ -155,22 +155,38 @@
 #skin-analyzer-page .hero-text-top {
   text-align: center;
   margin-top: 4rem;
+  padding: var(--space-6) var(--space-4);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius-lg);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
 #skin-analyzer-page .hero-main-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  color: white;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  color: #000000;
+  font-weight: 900;
+  font-family: var(--font-heading-family), 'Arial Black', sans-serif;
+  margin-bottom: 1.5rem;
+  text-shadow: none;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: none;
 }
 
 #skin-analyzer-page .hero-main-subtitle {
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  color: rgba(255,255,255,0.95);
-  max-width: 600px;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  color: #000000;
+  max-width: 700px;
   margin: 0 auto;
-  text-shadow: 0 2px 15px rgba(0,0,0,0.8);
+  text-shadow: none;
+  font-weight: 400;
+  font-family: var(--font-body-family), -apple-system, sans-serif;
+  line-height: 1.6;
+  letter-spacing: 0;
 }
 
 #skin-analyzer-page .hero-badge {
